@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BXB Club — Social Calendar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0D0F11;
+    --bg-card: #161A1F;
+    --bg-card-hover: #1C2128;
+    --bg-dropdown: #1A1E24;
+    --border: #2A2F38;
+    --border-light: #343B46;
+    --text-primary: #F0F2F5;
+    --text-secondary: #8B95A5;
+    --text-muted: #5E6878;
+
+    /* Category colors */
+    --cat-fitness: #22C55E;
+    --cat-fitness-bg: rgba(34,197,94,0.08);
+    --cat-fitness-border: rgba(34,197,94,0.2);
+
+    --cat-social: #F59E0B;
+    --cat-social-bg: rgba(245,158,11,0.08);
+    --cat-social-border: rgba(245,158,11,0.2);
+
+    --cat-adventure: #EF4444;
+    --cat-adventure-bg: rgba(239,68,68,0.08);
+    --cat-adventure-border: rgba(239,68,68,0.2);
+
+    --cat-growth: #8B5CF6;
+    --cat-growth-bg: rgba(139,92,246,0.08);
+    --cat-growth-border: rgba(139,92,246,0.2);
+
+    --cat-wellness: #06B6D4;
+    --cat-wellness-bg: rgba(6,182,212,0.08);
+    --cat-wellness-border: rgba(6,182,212,0.2);
+
+    --cat-sport: #3B82F6;
+    --cat-sport-bg: rgba(59,130,246,0.08);
+    --cat-sport-border: rgba(59,130,246,0.2);
+
+    /* Duration badges */
+    --dur-2hr: #22C55E;
+    --dur-2hr-bg: rgba(34,197,94,0.12);
+    --dur-half: #F59E0B;
+    --dur-half-bg: rgba(245,158,11,0.12);
+    --dur-day: #EF4444;
+    --dur-day-bg: rgba(239,68,68,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #F59E0B, #EF4444, #8B5CF6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  .header p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  /* Filter bar */
+  .filter-section {
+    margin-bottom: 2rem;
+  }
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+    align-items: center;
+  }
+  .filter-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-right: 6px;
+    min-width: 70px;
+  }
+  .filter-btn {
+    padding: 5px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover {
+    border-color: var(--border-light);
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.03);
+  }
+  .filter-btn.active {
+    background: var(--text-primary);
+    color: var(--bg);
+    border-color: var(--text-primary);
+  }
+
+  /* Category color dots in filter */
+  .filter-btn[data-filter="fitness"]::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cat-fitness); margin-right: 5px; }
+  .filter-btn[data-filter="social"]::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cat-social); margin-right: 5px; }
+  .filter-btn[data-filter="adventure"]::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cat-adventure); margin-right: 5px; }
+  .filter-btn[data-filter="growth"]::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cat-growth); margin-right: 5px; }
+  .filter-btn[data-filter="wellness"]::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cat-wellness); margin-right: 5px; }
+  .filter-btn[data-filter="sport"]::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cat-sport); margin-right: 5px; }
+
+  /* Grid */
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+  }
+
+  /* Cards */
+  .event-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .event-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+  .event-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+  }
+
+  /* Category top-bar colors */
+  .event-card[data-category="fitness"]::before { background: var(--cat-fitness); }
+  .event-card[data-category="social"]::before { background: var(--cat-social); }
+  .event-card[data-category="adventure"]::before { background: var(--cat-adventure); }
+  .event-card[data-category="growth"]::before { background: var(--cat-growth); }
+  .event-card[data-category="wellness"]::before { background: var(--cat-wellness); }
+  .event-card[data-category="sport"]::before { background: var(--cat-sport); }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .card-title-area {
+    flex: 1;
+  }
+  .event-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .event-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  /* Duration badge */
+  .dur-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .dur-badge.dur-2hr { background: var(--dur-2hr-bg); color: var(--dur-2hr); }
+  .dur-badge.dur-half { background: var(--dur-half-bg); color: var(--dur-half); }
+  .dur-badge.dur-day { background: var(--dur-day-bg); color: var(--dur-day); }
+
+  /* Meta row */
+  .meta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .meta-item {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .freq-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .freq-weekly { background: var(--cat-fitness); }
+  .freq-biweekly { background: var(--cat-social); }
+  .freq-monthly { background: var(--cat-adventure); }
+  .freq-quarterly { background: var(--cat-growth); }
+  /* .freq-flexible removed — coworking is weekly */
+
+  .location-row {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* Category pill */
+  .cat-pill {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .cat-pill-fitness { background: var(--cat-fitness-bg); color: var(--cat-fitness); border: 1px solid var(--cat-fitness-border); }
+  .cat-pill-social { background: var(--cat-social-bg); color: var(--cat-social); border: 1px solid var(--cat-social-border); }
+  .cat-pill-adventure { background: var(--cat-adventure-bg); color: var(--cat-adventure); border: 1px solid var(--cat-adventure-border); }
+  .cat-pill-growth { background: var(--cat-growth-bg); color: var(--cat-growth); border: 1px solid var(--cat-growth-border); }
+  .cat-pill-wellness { background: var(--cat-wellness-bg); color: var(--cat-wellness); border: 1px solid var(--cat-wellness-border); }
+  .cat-pill-sport { background: var(--cat-sport-bg); color: var(--cat-sport); border: 1px solid var(--cat-sport-border); }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Two-hour note */
+  .twohr-note {
+    font-size: 0.75rem;
+    color: var(--dur-2hr);
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    line-height: 1.4;
+  }
+
+  /* Note */
+  .card-note {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* Niche suggestion */
+  .niche-suggestion {
+    font-size: 0.72rem;
+    color: var(--cat-growth);
+    background: var(--cat-growth-bg);
+    border: 1px solid var(--cat-growth-border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    line-height: 1.5;
+  }
+  .niche-suggestion strong {
+    color: var(--cat-growth);
+  }
+
+  /* Contact info */
+  .contact-info {
+    font-size: 0.72rem;
+    color: var(--cat-wellness);
+    background: var(--cat-wellness-bg);
+    border: 1px solid var(--cat-wellness-border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    line-height: 1.5;
+  }
+
+  /* Tag row */
+  .tag-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .tag-content { border-color: rgba(245,158,11,0.3); color: #F59E0B; }
+  .tag-repeat { border-color: rgba(34,197,94,0.3); color: #22C55E; }
+
+  /* Dropdown toggle */
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    width: 100%;
+    text-align: left;
+  }
+  .dropdown-toggle:hover {
+    color: var(--text-primary);
+    border-color: var(--border-light);
+    background: rgba(255,255,255,0.02);
+  }
+  .dropdown-toggle .arrow {
+    transition: transform 0.2s;
+    font-size: 0.6rem;
+    margin-left: auto;
+  }
+  .dropdown-toggle.open .arrow {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-body {
+    display: none;
+    background: var(--bg-dropdown);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 4px;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .dropdown-body.open {
+    display: block;
+  }
+  .dropdown-body h4 {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    margin-top: 10px;
+  }
+  .dropdown-body h4:first-child {
+    margin-top: 0;
+  }
+  .dropdown-body p {
+    margin-bottom: 6px;
+  }
+  .dropdown-body .food-note {
+    color: var(--cat-social);
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* Responsive */
+  @media (max-width: 680px) {
+    .events-grid {
+      grid-template-columns: 1fr;
+    }
+    .header h1 {
+      font-size: 1.5rem;
+    }
+    .stats-bar {
+      gap: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>BXB Club — Social Calendar</h1>
+    <p>Show up. Host one or two. Own the room. Every event comes with a full hosting guide — structure, flow, facilitation prompts, and contacts — so you walk in prepared and leave known as the guy who puts on a great event.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num">20</div><div class="stat-label">Events</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Categories</div></div>
+    <div class="stat"><div class="stat-num">12</div><div class="stat-label">Under 2 hrs</div></div>
+    <div class="stat"><div class="stat-num">4+</div><div class="stat-label">Per week</div></div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cat-fitness)"></div> Fitness</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cat-social)"></div> Social</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cat-adventure)"></div> Adventure</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cat-growth)"></div> Growth</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cat-wellness)"></div> Wellness</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cat-sport)"></div> Sport</div>
+    <div style="margin-left: auto; display: flex; gap: 1rem; flex-wrap: wrap;">
+      <div class="legend-item"><span class="dur-badge dur-2hr" style="font-size:0.6rem;padding:2px 7px;">2 HRS</span> Quick commit</div>
+      <div class="legend-item"><span class="dur-badge dur-half" style="font-size:0.6rem;padding:2px 7px;">HALF DAY</span> Block the morning</div>
+      <div class="legend-item"><span class="dur-badge dur-day" style="font-size:0.6rem;padding:2px 7px;">FULL DAY</span> All-in day trip</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-section">
+    <div class="filter-group">
+      <span class="filter-label">Duration</span>
+      <button class="filter-btn active" data-filter="all" data-group="main">All</button>
+      <button class="filter-btn" data-filter="2hr" data-group="main">2 hrs max</button>
+      <button class="filter-btn" data-filter="half" data-group="main">Half day</button>
+      <button class="filter-btn" data-filter="day" data-group="main">Full day</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Frequency</span>
+      <button class="filter-btn" data-filter="weekly" data-group="freq">Weekly</button>
+      <button class="filter-btn" data-filter="biweekly" data-group="freq">Bi-weekly</button>
+      <button class="filter-btn" data-filter="monthly" data-group="freq">Monthly</button>
+      <button class="filter-btn" data-filter="quarterly" data-group="freq">Quarterly</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Category</span>
+      <button class="filter-btn" data-filter="fitness" data-group="cat">Fitness</button>
+      <button class="filter-btn" data-filter="social" data-group="cat">Social</button>
+      <button class="filter-btn" data-filter="adventure" data-group="cat">Adventure</button>
+      <button class="filter-btn" data-filter="growth" data-group="cat">Growth</button>
+      <button class="filter-btn" data-filter="wellness" data-group="cat">Wellness</button>
+      <button class="filter-btn" data-filter="sport" data-group="cat">Sport</button>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="events-grid" id="grid"></div>
+
+</div>
+
+<script>
+const events = [
+  // ═══════════════════════ WEEKLY ═══════════════════════
+  {
+    title: "Dinner Reservation",
+    subtitle: "Rotating restaurants across Canggu",
+    time: "2hr",
+    freq: "weekly",
+    freqLabel: "Weekly",
+    duration: "2 hrs",
+    category: "social",
+    location: "Rotating restaurants — Canggu / Seminyak / Pererenan",
+    hosting: {
+      summary: "Make the reservation. Pick somewhere with a semi-private table or back section. Share time and address 48 hrs out. Done.",
+      structure: "Arrive together. Host opens with one prompt question for the table (deal flow, life update, hot takes, etc.). Conversation flows from there. Hard stop at 2 hours — host announces it at the top.",
+      food: "Everyone orders and pays their own, or host pre-orders family-style and splits the bill via Grab/Gojek.",
+      hostTip: "Pick a restaurant none of the guys have been to. A new spot each week keeps it from feeling stale. If you're shy — the prompt question does the heavy lifting."
+    },
+    twoHrNote: "Hard stop at 2 hrs — host announces it up front. Everyone can make it, nobody's trapped.",
+    content: false,
+    repeatable: true,
+    note: "Optional one-liner theme per week: open table, deal flow, first-time guests sit next to a veteran.",
+    niche: "Theme nights: 'Deal Flow Dinner,' 'Founder Fails Only,' 'Ask Me Anything,' 'New Members Table.'",
+    contacts: null
+  },
+  {
+    title: "Coworking Session",
+    subtitle: "Minimum 1x/week — additional sessions always welcome",
+    time: "2hr",
+    freq: "weekly",
+    freqLabel: "Weekly (minimum)",
+    duration: "2 hrs",
+    category: "growth",
+    location: "Any private office or coworking space — Canggu area",
+    hosting: {
+      summary: "Book the space. Send one message: day, time, location, Wi-Fi password. That's it. One session is locked in weekly — but anyone can spin up extras anytime (coworking + breakfast, coworking + lunch, or standalone).",
+      structure: "People drop in, get work done, make a connection, leave. Zero guilt. Optional 10-min opening round: everyone states what they're working on today. Closing round: one win or blocker from the session.",
+      food: "Pair it with breakfast or lunch to add a social layer. Order in or walk somewhere nearby after the session wraps.",
+      hostTip: "Rotate venues to keep it fresh. You earn hosting credit for finding a great spot. Try to book a room where people face each other, not a row of desks. Combining coworking + a meal is an easy way to host two experiences in one."
+    },
+    twoHrNote: "Two hours. People drop in, work, connect, leave. Zero obligation.",
+    content: false,
+    repeatable: true,
+    note: "One session is guaranteed weekly. Anyone can host additional sessions anytime — coworking + breakfast, coworking + lunch, or standalone. Low friction, high frequency.",
+    niche: "Theme the session: 'AI Build Sprint,' 'Content Creation Hour,' 'Sales & Outreach Blitz,' 'Deep Work — No Talking,' 'Cowork + Lunch at [spot].'",
+    contacts: null
+  },
+  {
+    title: "Beach Workout",
+    subtitle: "Circuits, AMRAP, or bring a trainer",
+    time: "2hr",
+    freq: "weekly",
+    freqLabel: "Weekly",
+    duration: "75 min + 20 min debrief",
+    category: "fitness",
+    location: "Batu Bolong or Berawa Beach — 6:30 AM",
+    hosting: {
+      summary: "Lock location. Send time, what to wear, and workout plan (or bring an instructor). Show up 15 min early.",
+      structure: "6:30 AM start. 5 min warm-up. 45–50 min main workout (circuits, AMRAP, partner work). 10 min cooldown. 15–20 min post-workout debrief on the beach — one check-in question per person. Wrap by 8:15 AM.",
+      food: null,
+      hostTip: "If you're not a trainer, hire one for the session. Nobody expects you to be a fitness expert — they expect you to organize it. One member with a decent phone captures content for the group."
+    },
+    twoHrNote: "Under 2 hrs including the debrief. Early start means everyone's back by 8:30.",
+    content: true,
+    repeatable: true,
+    note: "One member captures content. Everyone gets the footage. Optional yoga instructor add-on for cooldown.",
+    niche: "Vary the format: 'Partner WOD,' 'Strongman Saturday,' 'Sprint & Swim,' 'Bodyweight Only.'",
+    contacts: "Optional yoga instructor for cooldown stretch: <strong>Nyoman Surya</strong> — +62 812-3867-4510 (Hatha/Vinyasa, group rates available)"
+  },
+  // ═══════════════════════ BI-WEEKLY ═══════════════════════
+  {
+    title: "Cocktail Party",
+    subtitle: "Two-hour cocktail party principle — hard open, hard close",
+    time: "2hr",
+    freq: "biweekly",
+    freqLabel: "Bi-weekly",
+    duration: "2 hrs — hard stop",
+    category: "social",
+    location: "Member's home or BXB villa",
+    hosting: {
+      summary: "You bring the drinks and a 15-min structured opener — one question, one game, or one guest intro. Guests arrive on time, leave when it wraps.",
+      structure: "Start on time. Host opens with a welcome and one structured icebreaker (15 min). Open floor networking and drinks (90 min). Host announces 15-min warning. Wrap — hard close. Nobody feels bad leaving, nobody feels pressured to stay.",
+      food: "Gojek/Grab order split equally among attendees. Or host sets a drinks-only format with simple bites.",
+      hostTip: "Shy hosts get a run sheet in advance from the BXB team. The structure does the heavy lifting — you just show up with drinks and press play on the format. Villa access makes this feel premium."
+    },
+    twoHrNote: "Two-hour cocktail party principle in full effect. Structured opener, open floor, hard close.",
+    content: true,
+    repeatable: true,
+    note: "Shy hosts get a run sheet in advance. The structure does the heavy lifting — host just shows up with drinks.",
+    niche: "Theme it: 'Investor Mixer,' 'Bring a Non-Member,' 'Whiskey & Wisdom,' 'Rooftop Q&A with a Guest.'",
+    contacts: null
+  },
+  {
+    title: "AI Workshop — Live Build",
+    subtitle: "One tool. One use case. Built live in the room.",
+    time: "2hr",
+    freq: "biweekly",
+    freqLabel: "Bi-weekly",
+    duration: "2 hrs",
+    category: "growth",
+    location: "Coworking space or BXB villa",
+    hosting: {
+      summary: "Pick one AI tool. Pick one real use case. Build it live in front of the group. Not a talk — a build.",
+      structure: "20 min: Intro — what the tool does and why you chose it. 60 min: Live build — screen shared, building in real time with the group following along or building alongside. 40 min: Q&A, share-out, and how others can apply it to their business.",
+      food: null,
+      hostTip: "Don't overthink it. Pick a tool you actually use. Solve a real problem. The messier the live demo, the more people learn. If something breaks, that's content."
+    },
+    twoHrNote: "Hard 2-hr cap. 20 min intro, 60 min build, 40 min Q&A and share-out.",
+    content: true,
+    repeatable: false,
+    note: "Each host owns a different tool. Compound knowledge across the year.",
+    niche: "Examples: 'Automate Lead Follow-Up with Claude,' 'Build a VSL Script with AI,' 'AI Content Repurposing Pipeline,' 'Chatbot for Your Offer.'",
+    contacts: null
+  },
+  {
+    title: "Surfing Session",
+    subtitle: "Two groups — coached beginners + free surf",
+    time: "2hr",
+    freq: "biweekly",
+    freqLabel: "Bi-weekly",
+    duration: "2 hrs",
+    category: "fitness",
+    location: "Batu Bolong or Old Man's — Canggu",
+    hosting: {
+      summary: "Book an instructor for beginners. Confirm board count for all levels. Intermediate+ self-organize. Everyone meets on the beach.",
+      structure: "Meet on the beach. Beginners go with the instructor. Intermediate/advanced paddle out together. Regroup after 90 min. Post-surf smoothie is optional and unstructured. Starts and ends on the sand.",
+      food: null,
+      hostTip: "The experience gap is real — splitting into two groups solves it. Don't try to coach if you're not qualified. Book the instructor and let them handle it. Your job is logistics."
+    },
+    twoHrNote: "Starts and ends on the beach. Two groups run simultaneously — coached and free surf.",
+    content: true,
+    repeatable: true,
+    note: "Solves the experience gap. Post-surf smoothie is optional and unstructured.",
+    niche: null,
+    contacts: "Surf instructors (beginner-friendly, group rates):<br><strong>Made Surya</strong> — +62 813-3850-2211 (Old Man's local, 10+ yrs teaching, up to 6 boards)<br><strong>Ketut Arta</strong> — +62 857-3921-6640 (Batu Bolong, patient with beginners, can bring 8 boards)<br><strong>Bali Surf School</strong> — +62 878-6100-9927 (larger groups, all gear included)"
+  },
+  {
+    title: "Recovery — Ice Bath + Sauna",
+    subtitle: "Low-effort, high-connection",
+    time: "2hr",
+    freq: "biweekly",
+    freqLabel: "Bi-weekly",
+    duration: "90 min",
+    category: "wellness",
+    location: "Rotating wellness venues — Canggu",
+    hosting: {
+      summary: "Book the facility for the group. Negotiate one group rate. Show up.",
+      structure: "Arrive. Brief intro for first-timers on the protocol (hot/cold cycles). Everyone does their own thing. Conversation happens naturally between rounds. No facilitation needed — the environment does the work.",
+      food: null,
+      hostTip: "Easiest event to host. Book it, send the address, show up. Best conversations happen in the cold plunge."
+    },
+    twoHrNote: "90 min in the venue. Conversation happens naturally. No facilitation needed.",
+    content: false,
+    repeatable: true,
+    note: "Low-effort, high-connection. Some of the best conversations happen in a cold plunge.",
+    niche: null,
+    contacts: null
+  },
+  // ═══════════════════════ MONTHLY ═══════════════════════
+  {
+    title: "Pádel Tournament",
+    subtitle: "4-person round robin with running leaderboard",
+    time: "2hr",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "2 hrs",
+    category: "sport",
+    location: "Bali Padel Center — Kerobokan",
+    hosting: {
+      summary: "Reserve courts. Build the bracket. Send it before the day. Show up and run it.",
+      structure: "Arrive. Quick warm-up (10 min). Round robin matches on 2 courts (80 min). Final match (20 min). Scores recorded on running leaderboard. Winner gets bragging rights until next month.",
+      food: null,
+      hostTip: "4-person round robin fits in 2 hrs with 2 courts. The format is set — you just execute. Print the bracket and bring a marker."
+    },
+    twoHrNote: "4-person round robin fits in 2 hrs with 2 courts. Format is set — host just executes.",
+    content: true,
+    repeatable: true,
+    note: "Running leaderboard across months creates ongoing stakes. Winner gets hosting bragging rights.",
+    niche: null,
+    contacts: null
+  },
+  {
+    title: "Billiards + Darts — Combined Score",
+    subtitle: "Two games, one leaderboard — more interesting than either solo",
+    time: "2hr",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "2 hrs",
+    category: "sport",
+    location: "Private billiards venue — Seminyak",
+    hosting: {
+      summary: "Book tables and dartboards. Print the combined scoring sheet. Run the bracket.",
+      structure: "Two games, one combined leaderboard. 45 min billiards round. 45 min darts round. 30 min final combined scores, tiebreakers, and bragging rights. Points from both games add up — you can't just be good at one.",
+      food: null,
+      hostTip: "The combined scoring is what makes this interesting. Prepare the scoring sheet in advance. It's a pub night with stakes."
+    },
+    twoHrNote: "Two games, one leaderboard, 2-hour window. Unique enough that people talk about it.",
+    content: true,
+    repeatable: true,
+    note: "Combined scoring across both games makes it more interesting than either solo.",
+    niche: null,
+    contacts: null
+  },
+  {
+    title: "Boxing — Group Pads Session",
+    subtitle: "Trainer runs it — just show up and throw hands",
+    time: "2hr",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "90 min",
+    category: "fitness",
+    location: "Legends MMA or Bali Fight Lab — Canggu",
+    hosting: {
+      summary: "Book the group pads session. Confirm equipment and headcount. Show up — trainer runs the session.",
+      structure: "10 min warm-up (trainer-led). 60 min pads work — rotating partners, combo drills, body shots. 20 min cooldown and group photo. Pads work only — more fun, no liability.",
+      food: null,
+      hostTip: "The trainer does the heavy lifting. You handle logistics — booking, headcount, confirmation. Group shot post-session is a great content moment."
+    },
+    twoHrNote: "Under 2 hrs. Pads work only — more fun, no liability. Trainer does the heavy lifting.",
+    content: true,
+    repeatable: true,
+    note: "Content angle is automatic. Group shot post-session is a good visual.",
+    niche: null,
+    contacts: "Boxing coach: <strong>Coach Dewa</strong> — +62 819-1677-3302 (Legends MMA, group pads sessions, all levels, gear provided)"
+  },
+  {
+    title: "Paintball — 2hr Block",
+    subtitle: "Pre-assigned teams to mix cliques",
+    time: "2hr",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "2 hrs on-site (~3 hrs door-to-door)",
+    category: "adventure",
+    location: "Paintball Bali — Kerobokan (~20 min from Canggu)",
+    hosting: {
+      summary: "Book the field. Pre-assign teams — mixing members to break cliques. Confirm gear rental.",
+      structure: "Meet at venue. Gear up (15 min). 3–4 rounds (75 min). Debrief + GoPro footage review (15 min). Teams assigned in advance by the host — the goal is to mix people who don't know each other well.",
+      food: null,
+      hostTip: "Pre-assigning teams is the move. Mix the cliques — that's where the bonding happens. GoPro content is built in."
+    },
+    twoHrNote: "Venue is 20 min away. 2-hr session on-site. Realistic total: ~3 hrs door-to-door — flag it upfront.",
+    content: true,
+    repeatable: true,
+    note: "Host assigns teams to break existing cliques. GoPro content is built in.",
+    niche: null,
+    contacts: null
+  },
+  {
+    title: "Sunset Yoga — Private Instructor",
+    subtitle: "Premium feel, split cost is nothing",
+    time: "2hr",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "90 min",
+    category: "wellness",
+    location: "Seminyak Beach or BXB villa",
+    hosting: {
+      summary: "Source and book the instructor. Confirm location and headcount 48 hrs out. Show up.",
+      structure: "Arrive. Instructor leads a 75-min flow class (Vinyasa/Hatha). 15 min savasana and closing. Sunset timing does all the ambience work. Host just handles the booking.",
+      food: null,
+      hostTip: "Private class at sunset feels premium and costs almost nothing split across the group. Pick a beachfront spot or the villa rooftop."
+    },
+    twoHrNote: "90 min class. Sunset timing does all the ambience work.",
+    content: true,
+    repeatable: true,
+    note: "Private class at sunset feels premium and costs very little split across the group.",
+    niche: null,
+    contacts: "Yoga instructor: <strong>Nyoman Surya</strong> — +62 812-3867-4510 (Hatha/Vinyasa, sunset sessions, up to 12 people, mats provided)"
+  },
+  {
+    title: "Archery Session",
+    subtitle: "Competition format with small prize",
+    time: "2hr",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "2 hrs",
+    category: "sport",
+    location: "Bali Archery — Kerobokan area",
+    hosting: {
+      summary: "Book the range. Set the competition format (3 rounds, best cumulative score). Small prize for the winner.",
+      structure: "Quick safety brief from staff (10 min). Practice round (15 min). 3 scored rounds (60 min). Final shootout for top 3 (20 min). Winner announced. Running leaderboard across months.",
+      food: null,
+      hostTip: "Staff handles instruction. You handle the bracket and scoring. A small prize (buy the winner lunch) makes it memorable."
+    },
+    twoHrNote: "2 hrs on-site. Compact format — no travel needed if using a Canggu-area range.",
+    content: true,
+    repeatable: true,
+    note: "Running leaderboard across events. Quick enough for busy schedules, competitive enough to be interesting.",
+    niche: null,
+    contacts: null
+  },
+  {
+    title: "Breathwork Circle",
+    subtitle: "Guided session — bring an instructor or BYO",
+    time: "2hr",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "90 min",
+    category: "wellness",
+    location: "BXB villa, beach pavilion, or yoga studio — Canggu",
+    hosting: {
+      summary: "Book a breathwork facilitator or bring your own certified instructor. Confirm location and headcount. Set the intention for the session.",
+      structure: "Opening circle — host sets the intention (10 min). Guided breathwork session, typically holotropic or Wim Hof style (45–60 min). Integration + sharing circle (20 min). Close. Powerful experience — keep the space safe and judgment-free.",
+      food: null,
+      hostTip: "This one requires a good facilitator. Don't wing it. If you're not trained, hire someone. The sharing circle after is where the real connection happens. Keep it confidential."
+    },
+    twoHrNote: "90 min including integration. Deep work in a compact format.",
+    content: false,
+    repeatable: true,
+    note: "Powerful group experience. Once a month keeps it special. Confidentiality is key.",
+    niche: "Styles to rotate: 'Wim Hof Protocol,' 'Holotropic Journey,' 'Box Breathing for Performance,' 'Pranayama Flow.'",
+    contacts: "Breathwork facilitators:<br><strong>Arjuna Kemp</strong> — +62 821-4500-7738 (holotropic + Wim Hof, group sessions, 5+ yrs in Bali)<br><strong>Luna Breathwork Bali</strong> — +62 878-6223-1155 (trauma-informed, gentle + deep options)<br>Or bring your own certified instructor — just confirm with the BXB team in advance."
+  },
+  {
+    title: "Hiking Trip",
+    subtitle: "Curated trail with group — conversation on the move",
+    time: "half",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "Half day (2–6 hrs depending on trail + drive time)",
+    category: "adventure",
+    location: "Rotating trails across Bali — see trail list",
+    hosting: {
+      summary: "Pick a trail from the list. Confirm difficulty level, meeting point, and transport. Send the details 72 hrs out. Lead or assign a sweep.",
+      structure: "Meet at trailhead. Brief on distance and pace (5 min). Hike with structured buddy pairs — host assigns pairs from different circles. Water break midway with one group check-in question. Summit or endpoint photo. Return and optional post-hike meal.",
+      food: "Post-hike meal at a nearby warung — each pays own.",
+      hostTip: "Assigning buddy pairs for the hike creates deeper 1-on-1 conversations than group chatter. Pick a trail that matches the group's fitness level. Always have a sweep (last person)."
+    },
+    twoHrNote: null,
+    content: true,
+    repeatable: true,
+    note: null,
+    niche: "Theme it: 'Sunrise Hike + Meditation,' 'Trail Talk: Business Deep Dive,' 'Photography Hike — Content Day.'",
+    contacts: null,
+    trailList: [
+      { name: "Campuhan Ridge Walk", location: "Ubud", time: "1.5–2 hrs", difficulty: "Easy", notes: "Sunrise start. Iconic ridge with valley views. Great for a casual conversation hike." },
+      { name: "Tegallalang Rice Terraces Loop", location: "Ubud", time: "2–3 hrs", difficulty: "Easy–Moderate", notes: "Walk through working rice paddies. Photo-heavy. Good content day option." },
+      { name: "Sekumpul Waterfall Trail", location: "Buleleng (2 hrs from Canggu)", time: "3–4 hrs round trip", difficulty: "Moderate", notes: "Steep descent to Bali's most impressive waterfall. Half-day commitment." },
+      { name: "Tibumana Waterfall", location: "Bangli (1.5 hrs from Canggu)", time: "2–3 hrs", difficulty: "Easy–Moderate", notes: "Shorter drive than Sekumpul. Beautiful jungle trail. Swimmable pool at the base." },
+      { name: "Mount Batur Sunrise Trek", location: "Kintamani (1.5 hrs from Canggu)", time: "4–5 hrs (2 AM start)", difficulty: "Moderate–Hard", notes: "Sunrise from the summit. Full-day commitment. Iconic Bali experience." },
+      { name: "Gitgit Waterfall Trail", location: "Buleleng (2 hrs from Canggu)", time: "2–3 hrs", difficulty: "Easy", notes: "Multiple waterfalls along the trail. Less crowded than Sekumpul." },
+      { name: "Munduk Waterfall Circuit", location: "Munduk (2 hrs from Canggu)", time: "3–4 hrs", difficulty: "Moderate", notes: "Three waterfalls in one circuit. Cooler mountain climate. Coffee plantations on route." },
+      { name: "Nungnung Waterfall", location: "Badung (1.5 hrs from Canggu)", time: "2–3 hrs", difficulty: "Moderate", notes: "500+ steps down. Powerful waterfall. Less touristy. Good leg day." },
+      { name: "Tukad Cepung Waterfall", location: "Bangli (1.5 hrs from Canggu)", time: "2 hrs", difficulty: "Easy", notes: "Cave waterfall — light beams through the ceiling. Incredible content spot." },
+      { name: "West Bali National Park", location: "Jembrana (2.5 hrs from Canggu)", time: "4–6 hrs", difficulty: "Moderate–Hard", notes: "Full-day expedition. Jungle, coast, wildlife. Needs a local guide." }
+    ]
+  },
+  // ═══════════════════════ HALF DAY ═══════════════════════
+  {
+    title: "SUP / Kayak + Snorkel",
+    subtitle: "Paddle out, snorkel, regroup",
+    time: "half",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "3–4 hrs",
+    category: "adventure",
+    location: "Blue Lagoon, Padangbai (~45 min from Canggu)",
+    hosting: {
+      summary: "Reserve boards or kayaks. Arrange shared transport. Confirm snorkel gear on-site.",
+      structure: "Meet at venue. Gear check (15 min). Paddle out and snorkel (90–120 min). Regroup on the beach. Optional lunch at a local warung before heading back.",
+      food: "Local warung after — each pays own.",
+      hostTip: "Padangbai is easier access than Nusa Penida. Flag travel time in the invite — this is a half-day commitment."
+    },
+    twoHrNote: null,
+    content: true,
+    repeatable: true,
+    note: "Padangbai is easier access than Nusa Penida. Half-day — flag travel time in the invite.",
+    niche: null,
+    contacts: null
+  },
+  {
+    title: "Golf — 9 Holes + Breakfast",
+    subtitle: "The post-round breakfast is the real event",
+    time: "half",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "4–5 hrs",
+    category: "sport",
+    location: "Nirwana Bali Golf Club or New Kuta Golf",
+    hosting: {
+      summary: "Book tee time. Coordinate carts. Breakfast at the club after — best conversations happen there.",
+      structure: "Tee off. 9 holes (~3 hrs with cart). Post-round breakfast at the club restaurant — the real networking event. Each pays their own.",
+      food: "Club restaurant post-round. Each pays their own.",
+      hostTip: "9 holes keeps it accessible for non-golfers. The breakfast after is where the real conversations happen. Book early — tee times fill up."
+    },
+    twoHrNote: null,
+    content: true,
+    repeatable: true,
+    note: "9 holes keeps it accessible. Post-round breakfast is the real event.",
+    niche: null,
+    contacts: null
+  },
+  {
+    title: "Motorcycle Route",
+    subtitle: "Planned route, lunch stop, content opportunity",
+    time: "half",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "4–6 hrs",
+    category: "adventure",
+    location: "North Bali or East Bali coastal roads",
+    hosting: {
+      summary: "Plan the route. Share GPX file before departure. Pick a lunch spot. Lead or sweep.",
+      structure: "Meet at departure point. Safety brief (5 min). Ride in formation with lead and sweep riders. Photo/drone stop midway. Lunch at a pre-selected spot. Return together or split for direct routes home.",
+      food: "Lunch stop en route — each pays own.",
+      hostTip: "Drone shot of the group formation is standout content. Rotating routes keep it fresh for repeat hosts. Make sure everyone has proper gear."
+    },
+    twoHrNote: null,
+    content: true,
+    repeatable: false,
+    note: "Drone shot of the group formation is standout content. Rotating routes mean repeat hosts bring something new.",
+    niche: null,
+    contacts: null
+  },
+  // ═══════════════════════ FULL DAY ═══════════════════════
+  {
+    title: "Waterfall Trip + Content Day",
+    subtitle: "Videographers on site — a month of content in one day",
+    time: "day",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "Full day",
+    category: "adventure",
+    location: "Sekumpul or Tibumana Waterfall (~1.5–2 hrs from Canggu)",
+    hosting: {
+      summary: "Hire one or two videographers for the group. Coordinate transport. Everyone leaves with a month of content.",
+      structure: "Early departure. Travel to location (1.5–2 hrs). Explore, swim, and shoot content with videographers (3–4 hrs). Lunch at local warung. Return. Videographer delivers edits to each member within a week.",
+      food: "Warungs on-site or packed lunch — coordinate in advance.",
+      hostTip: "The content angle is the reason to go. Negotiate a group rate with the videographer. One day, a month of material for every member."
+    },
+    twoHrNote: null,
+    content: true,
+    repeatable: false,
+    note: "The content angle is the reason to go. One day, a month of material for every member.",
+    niche: null,
+    contacts: null
+  },
+  {
+    title: "Spearfishing Trip",
+    subtitle: "One of the high-status events to host",
+    time: "day",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "Full day",
+    category: "adventure",
+    location: "North Bali coast — boat from Amed or Lovina",
+    hosting: {
+      summary: "Charter the boat. Source fins, spearguns, wetsuits. Negotiate group rate. Confirm captain and safety equipment.",
+      structure: "Early morning departure. Boat ride to the spot (1–2 hrs). Spearfishing session (3–4 hrs). Catch-and-cook on the beach or at a local warung. Return. Limit to 6–8 guys for safety and logistics.",
+      food: "Catch-and-cook dinner if catch is good. Otherwise split a meal at a local warung.",
+      hostTip: "Requires 2 weeks lead time. One of the highest-status events to host. Limit group size — the boat dictates capacity. Make sure everyone gets a briefing on safety."
+    },
+    twoHrNote: null,
+    content: true,
+    repeatable: false,
+    note: "Limit to 6–8 guys. Requires 2 weeks lead time. One of the high-status events to host.",
+    niche: null,
+    contacts: null
+  },
+  // ═══════════════════════ QUARTERLY ═══════════════════════
+  {
+    title: "Dirt Bike Trip — Kintamani",
+    subtitle: "Operator handles the bikes — host handles the crew",
+    time: "day",
+    freq: "quarterly",
+    freqLabel: "Quarterly",
+    duration: "Full day",
+    category: "adventure",
+    location: "Kintamani highlands (~1.5 hrs from Canggu)",
+    hosting: {
+      summary: "Source the operator. Negotiate full group rate. Confirm skill level split — beginner and advanced tracks.",
+      structure: "Meet at operator's base. Safety brief and gear check. Split into beginner and advanced groups. Ride (3–4 hrs with breaks). Lunch at the highlands. Return. Operator handles bikes, guide, and safety.",
+      food: "Lunch at the highlands. Operator often includes food.",
+      hostTip: "Operator handles bikes and guide. You handle logistics, comms, and headcount. The photos from this one are always the best content."
+    },
+    twoHrNote: null,
+    content: true,
+    repeatable: false,
+    note: "Operator handles bikes and guide. Host handles logistics, comms, and headcount.",
+    niche: null,
+    contacts: null
+  }
+];
+
+// ──────────── Render ────────────
+function renderCards(filterTime, filterFreq, filterCat) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  events
+    .filter(e => {
+      if (filterTime !== 'all' && e.time !== filterTime) return false;
+      if (filterFreq && e.freq !== filterFreq) return false;
+      if (filterCat && e.category !== filterCat) return false;
+      return true;
+    })
+    .forEach((e, idx) => {
+      const durClass = e.time === '2hr' ? 'dur-2hr' : e.time === 'half' ? 'dur-half' : 'dur-day';
+      const durLabel = e.time === '2hr' ? '2 hrs max' : e.time === 'half' ? 'Half day' : 'Full day';
+      const freqDot = `freq-${e.freq}`;
+      const catPill = `cat-pill-${e.category}`;
+      const catLabel = e.category.charAt(0).toUpperCase() + e.category.slice(1);
+      const uid = `dd-${idx}`;
+
+      let dropdownHTML = '';
+      if (e.hosting) {
+        let bodyContent = '';
+        bodyContent += `<h4>How to Host</h4><p>${e.hosting.summary}</p>`;
+        bodyContent += `<h4>Structure & Flow</h4><p>${e.hosting.structure}</p>`;
+        if (e.hosting.food) bodyContent += `<h4>Food & Drinks</h4><p class="food-note">${e.hosting.food}</p>`;
+        bodyContent += `<h4>Host Tip</h4><p>${e.hosting.hostTip}</p>`;
+        dropdownHTML = `
+          <button class="dropdown-toggle" onclick="toggleDrop('${uid}', this)">
+            Your Hosting Guide <span style="font-weight:400;color:var(--text-muted);">— provided to every host</span> <span class="arrow">▼</span>
+          </button>
+          <div class="dropdown-body" id="${uid}">${bodyContent}</div>
+        `;
+      }
+
+      let trailHTML = '';
+      if (e.trailList) {
+        const trailUid = `trail-${idx}`;
+        trailHTML = `
+          <button class="dropdown-toggle" onclick="toggleDrop('${trailUid}', this)">
+            Trail Options (${e.trailList.length} trails) <span class="arrow">▼</span>
+          </button>
+          <div class="dropdown-body" id="${trailUid}">
+            <h4>Trail Options</h4>
+            ${e.trailList.map(t => `<p><strong>${t.name}</strong> — ${t.location} · ${t.time} · ${t.difficulty}<br><span style="color:var(--text-muted);font-size:0.72rem;">${t.notes}</span></p>`).join('')}
+          </div>`;
+      }
+
+      const card = document.createElement('div');
+      card.className = 'event-card';
+      card.setAttribute('data-category', e.category);
+      card.setAttribute('data-time', e.time);
+      card.setAttribute('data-freq', e.freq);
+
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="card-title-area">
+            <div class="event-title">${e.title}</div>
+            ${e.subtitle ? `<div class="event-subtitle">${e.subtitle}</div>` : ''}
+          </div>
+          <span class="dur-badge ${durClass}">${durLabel}</span>
+        </div>
+        <div class="meta-row">
+          <span class="cat-pill ${catPill}">${catLabel}</span>
+          <div class="meta-item"><span class="freq-dot ${freqDot}"></span>${e.freqLabel}</div>
+          <div class="meta-item">${e.duration}</div>
+        </div>
+        <div class="location-row">${e.location}</div>
+        <div class="divider"></div>
+        ${dropdownHTML}
+        ${e.twoHrNote ? `<div class="twohr-note">⏱ ${e.twoHrNote}</div>` : ''}
+        ${e.note ? `<div class="card-note">${e.note}</div>` : ''}
+        ${e.niche ? `<div class="niche-suggestion"><strong>Niche it:</strong> ${e.niche}</div>` : ''}
+        ${e.contacts ? `<div class="contact-info">📞 ${e.contacts}</div>` : ''}
+        ${trailHTML}
+        <div class="tag-row">
+          ${e.content ? '<span class="tag tag-content">+ content</span>' : ''}
+          ${e.repeatable ? '<span class="tag tag-repeat">repeatable</span>' : ''}
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+  // Update stats
+  const filtered = document.querySelectorAll('.event-card');
+  document.querySelector('.stat-num').textContent = events.length;
+}
+
+function toggleDrop(id, btn) {
+  const body = document.getElementById(id);
+  const isOpen = body.classList.contains('open');
+  // Close all other dropdowns
+  document.querySelectorAll('.dropdown-body').forEach(d => {
+    if (!d.id) return;
+    d.classList.remove('open');
+  });
+  document.querySelectorAll('.dropdown-toggle').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open');
+    btn.classList.add('open');
+  }
+}
+
+// ──────────── Filters ────────────
+let activeTime = 'all';
+let activeFreq = null;
+let activeCat = null;
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filter = btn.dataset.filter;
+    const group = btn.dataset.group;
+
+    if (group === 'main') {
+      activeTime = filter;
+      activeFreq = null;
+      activeCat = null;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    } else if (group === 'freq') {
+      if (activeFreq === filter) {
+        activeFreq = null;
+        btn.classList.remove('active');
+      } else {
+        document.querySelectorAll('[data-group="freq"]').forEach(b => b.classList.remove('active'));
+        activeFreq = filter;
+        btn.classList.add('active');
+      }
+      // Clear main "all" active if a freq filter is applied
+      if (activeFreq) {
+        activeTime = 'all';
+        document.querySelectorAll('[data-group="main"]').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-filter="all"]').classList.add('active');
+      }
+    } else if (group === 'cat') {
+      if (activeCat === filter) {
+        activeCat = null;
+        btn.classList.remove('active');
+      } else {
+        document.querySelectorAll('[data-group="cat"]').forEach(b => b.classList.remove('active'));
+        activeCat = filter;
+        btn.classList.add('active');
+      }
+    }
+
+    renderCards(activeTime, activeFreq, activeCat);
+  });
+});
+
+renderCards('all', null, null);
+</script>
+
+</body>
+</html>
