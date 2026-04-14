@@ -266,7 +266,6 @@
   .freq-biweekly { background: var(--cat-social); }
   .freq-monthly { background: var(--cat-adventure); }
   .freq-quarterly { background: var(--cat-growth); }
-  /* .freq-flexible removed — coworking is weekly */
 
   .location-row {
     font-size: 0.75rem;
@@ -416,9 +415,27 @@
   .dropdown-body p {
     margin-bottom: 6px;
   }
-  .dropdown-body .food-note {
-    color: var(--cat-social);
-  }
+
+  /* Timeline styles */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item { display: flex; gap: 12px; }
+  .tl-time { font-size: 0.7rem; color: var(--text-muted); min-width: 50px; padding-top: 2px; flex-shrink: 0; font-weight: 600; }
+  .tl-content { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6; padding-bottom: 12px; border-left: 1px solid var(--border); padding-left: 14px; position: relative; }
+  .tl-content::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); position: absolute; left: -4px; top: 6px; }
+  .tl-item:last-child .tl-content { border-left-color: transparent; }
+
+  /* Content blocks */
+  .invite-block { background: rgba(245,158,11,0.06); border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.7; font-style: italic; border-left: 2px solid rgba(245,158,11,0.3); }
+  .script-block { background: rgba(139,92,246,0.06); border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.7; border-left: 2px solid rgba(139,92,246,0.3); }
+  .science-block { background: rgba(6,182,212,0.06); border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.7; border-left: 2px solid rgba(6,182,212,0.3); }
+
+  /* Question list */
+  .q-list { list-style: none; display: flex; flex-direction: column; gap: 4px; padding: 0; }
+  .q-list li { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; padding-left: 16px; position: relative; }
+  .q-list li::before { content: '–'; position: absolute; left: 0; color: var(--text-muted); }
+
+  /* Shy host block */
+  .shy-block { font-size: 0.78rem; color: var(--cat-social); background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 10px 14px; line-height: 1.6; }
 
   /* Legend */
   .legend {
@@ -536,18 +553,39 @@ const events = [
     category: "social",
     location: "Rotating restaurants — Canggu / Seminyak / Pererenan",
     hosting: {
-      summary: "Make the reservation. Pick somewhere with a semi-private table or back section. Share time and address 48 hrs out. Done.",
-      structure: "Arrive together. Host opens with one prompt question for the table (deal flow, life update, hot takes, etc.). Conversation flows from there. Hard stop at 2 hours — host announces it at the top.",
-      food: "Everyone orders and pays their own, or host pre-orders family-style and splits the bill via Grab/Gojek.",
-      hostTip: "Pick a restaurant none of the guys have been to. A new spot each week keeps it from feeling stale. If you're shy — the prompt question does the heavy lifting."
+      tagline: "A structured dinner with conversation prompts that keeps the group engaged without feeling forced.",
+      invite: "Hey everyone — [DATE] at [TIME], dinner at [RESTAURANT]. Table for [#]. Address: [ADDRESS]. [DRESS CODE if any]. We'll do one prompt question at the top and bottom, open conversation in the middle. Grab your own or I'm ordering family style for $[X]/person. Just let me know if you're in.",
+      setup: "Make the reservation 48 hrs in advance. Request a semi-private table or back section if possible. Confirm the restaurant has enough room for the group to stay together. If ordering family style, get a rough headcount and pre-select 4–5 dishes that work for the group.",
+      frame: "After everyone sits: 'Thanks for coming. Quick thing — I want to make sure we get real conversations happening. At the top, I'm going to ask one question. Just share whatever comes to mind, no pressure. It's just to get us talking. Then we eat and talk naturally. At the end, quick final round. Sound good?' Then ask the opening question.",
+      timeline: [
+        ["0:00", "Everyone seated. Host frames the format (2 min)."],
+        ["0:02", "First round — host asks opening question. Each person shares 30–60 sec (15 min total, quick rounds)."],
+        ["0:17", "Food arrives or is served. Open conversation — side chats are encouraged. People can break into smaller conversations if they want."],
+        ["1:30", "Host announces '15 minutes left' to wrap up the meal."],
+        ["1:45", "Final round — host asks closing question. Each person shares briefly (10 min)."],
+        ["1:55", "Host thanks everyone. People pay or split the bill."]
+      ],
+      questions: [
+        "What's a risk you took in the last year that was worth it?",
+        "What are you optimising for right now — and has that changed?",
+        "What's something you believed 5 years ago that you no longer believe?",
+        "What does 'winning' look like for you this year?",
+        "What's the best piece of advice you've ignored?",
+        "If you could change one thing about your daily routine, what would it be?"
+      ],
+      questionsNote: null,
+      shy: "Pick a restaurant you've been to before so you feel confident in the space. The prompt question does the heavy lifting — you just read it and listen. If someone goes long, gently move to the next person: 'Love that — [NAME], what about you?'",
+      variations: "Hot Seat Dinner: one member shares a challenge, group brainstorms solutions for 60 min. Speed Swap: every 20 min, people move to a new seat partner. Theme Night: everyone prepares one take on a specific topic (e.g., 'one trend I'm betting on' or 'worst investment I made'). Jeffersonian format works for intro/closing rounds, but the middle is open — side chats are encouraged.",
+      additionalNotes: "Getting the guys to buy in to the format is half the event. Announce it in the invite so nobody is surprised. Frame it confidently as 'this is how we do dinners' — not as 'we're going to try something weird.' Restaurant ideas: La Brisa (beach club, semi-private back area), Ji Terrace by the Sea (sunset view, can split tables), Pomelo Canggu (private back room available), The Lawn (casual beachfront, good vibe), Milk & Madu (breakfast/brunch format option if you want to vary it)."
     },
-    twoHrNote: "Hard stop at 2 hrs — host announces it up front. Everyone can make it, nobody's trapped.",
+    twoHrNote: "Hard stop at 2 hrs. Host announces the timing up front so nobody feels trapped.",
     content: false,
     repeatable: true,
-    note: "Optional one-liner theme per week: open table, deal flow, first-time guests sit next to a veteran.",
+    note: null,
     niche: "Theme nights: 'Deal Flow Dinner,' 'Founder Fails Only,' 'Ask Me Anything,' 'New Members Table.'",
-    contacts: null
+    tags: null
   },
+
   {
     title: "Coworking Session",
     subtitle: "Minimum 1x/week — additional sessions always welcome",
@@ -558,18 +596,30 @@ const events = [
     category: "growth",
     location: "Any private office or coworking space — Canggu area",
     hosting: {
-      summary: "Book the space. Send one message: day, time, location, Wi-Fi password. That's it. One session is locked in weekly — but anyone can spin up extras anytime (coworking + breakfast, coworking + lunch, or standalone).",
-      structure: "People drop in, get work done, make a connection, leave. Zero guilt. Optional 10-min opening round: everyone states what they're working on today. Closing round: one win or blocker from the session.",
-      food: "Pair it with breakfast or lunch to add a social layer. Order in or walk somewhere nearby after the session wraps.",
-      hostTip: "Rotate venues to keep it fresh. You earn hosting credit for finding a great spot. Try to book a room where people face each other, not a row of desks. Combining coworking + a meal is an easy way to host two experiences in one."
+      tagline: "Book a space, send the details, people show up and get work done together.",
+      invite: "[DATE] [TIME] — 2-hour coworking session at [LOCATION]. Address: [ADDRESS]. Wi-Fi: [PASSWORD]. Drop in anytime, work on whatever. Optional: [breakfast/lunch after at SPOT]. Just let me know if you're coming so I can make sure there's space.",
+      setup: "Book a private room or quiet area that seats 6–12 people facing each other, not a row of individual desks. Send Wi-Fi password and parking info. Confirm the space is quiet and has good tables.",
+      frame: "People arrive and sit down. No hard frame needed. Optional: 'Hey, quick opener — nobody's required, but if you want, say what you're working on today. Then we'll work until [TIME]. Closing round is a quick win or blocker if anyone wants to share. Otherwise, just come in and work.'",
+      timeline: [
+        ["0:00", "Optional opening round — each person states what they're working on (5 min total, very quick)."],
+        ["0:05", "Work in silence or with music. Host is available for quick questions/help if anyone needs it."],
+        ["1:50", "10-minute warning. People can wrap up."],
+        ["2:00", "Closing round — optional quick wins or blockers (5 min). If combining with breakfast/lunch, transition to that now."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "No facilitation pressure. You're just the person who booked the space and set the time. If people want to work in silence, that's perfect. Your job is to show up on time and close the space.",
+      variations: "Body Doubling format: everyone works on their own projects but in the same space for accountability. Pomodoro style: 25 min focused work, 5 min break, repeat. Help-a-Brother: one person shares a challenge, group brainstorms for 30 min, then return to work. Pair it with breakfast or lunch at a nearby spot to add a social layer. Pair it with a specific skill theme: 'AI Build Sprint,' 'Content Creation Hour,' 'Sales & Outreach Blitz,' 'Deep Work — No Talking.'",
+      additionalNotes: "One coworking session is locked in weekly. Anyone can host additional sessions anytime — Thursday breakfast cowork, Tuesday lunch cowork, Saturday deep work, whatever. The combo meals (cowork + breakfast, cowork + lunch) make it feel more social without adding much complexity. Venue ideas: Outpost Canggu, Dojo Bali, Tribal Bali, BXB Villa, Crate Cafe (private upstairs room)."
     },
     twoHrNote: "Two hours. People drop in, work, connect, leave. Zero obligation.",
     content: false,
     repeatable: true,
-    note: "One session is guaranteed weekly. Anyone can host additional sessions anytime — coworking + breakfast, coworking + lunch, or standalone. Low friction, high frequency.",
-    niche: "Theme the session: 'AI Build Sprint,' 'Content Creation Hour,' 'Sales & Outreach Blitz,' 'Deep Work — No Talking,' 'Cowork + Lunch at [spot].'",
-    contacts: null
+    note: "One session locked in weekly. Anyone can host additional sessions anytime — coworking + breakfast, coworking + lunch, or standalone.",
+    niche: null,
+    tags: null
   },
+
   {
     title: "Beach Workout",
     subtitle: "Circuits, AMRAP, or bring a trainer",
@@ -580,41 +630,84 @@ const events = [
     category: "fitness",
     location: "Batu Bolong or Berawa Beach — 6:30 AM",
     hosting: {
-      summary: "Lock location. Send time, what to wear, and workout plan (or bring an instructor). Show up 15 min early.",
-      structure: "6:30 AM start. 5 min warm-up. 45–50 min main workout (circuits, AMRAP, partner work). 10 min cooldown. 15–20 min post-workout debrief on the beach — one check-in question per person. Wrap by 8:15 AM.",
-      food: null,
-      hostTip: "If you're not a trainer, hire one for the session. Nobody expects you to be a fitness expert — they expect you to organize it. One member with a decent phone captures content for the group."
+      tagline: "Show up early, run a workout, debrief on the sand. Simple structure, built-in content.",
+      invite: "Beach workout — [DATE] 6:30 AM at [BEACH]. Wear whatever you want to sweat in. We'll do a 50-min workout (circuits/AMRAP/partner work — your choice), 10 min cooldown, then 15 min debrief on the beach. Let me know you're in so I can plan the workout.",
+      setup: "Arrive 15 min early. Scout the workout space — make sure there's enough room and it's not too crowded. Decide on the format: circuits (timed rounds), AMRAP (as many reps as possible), or partner work. Prepare the warm-up and main workout. If you're not a trainer, hire one for the session ($50–80).",
+      frame: "Once everyone's there: 'Thanks for showing up early. We're doing [FORMAT]. 5 min warm-up, then 45–50 min main workout, 10 min cooldown. After that, quick debrief on the sand — nothing intense, just checking in. Let's go.'",
+      timeline: [
+        ["0:00", "People arrive and stretch out."],
+        ["0:05", "5-min warm-up — light cardio, dynamic stretches."],
+        ["0:10", "45–50 min main workout — your chosen format (circuits, AMRAP, partner work)."],
+        ["1:00", "10-min cooldown — static stretches, breathwork."],
+        ["1:10", "Debrief on the sand. Host asks: 'How are you feeling? What's one win from today?' Each person shares (10–15 min)."],
+        ["1:25", "Wrap. People shower or head home. Optional smoothie spot nearby if anyone wants to extend it."]
+      ],
+      questions: [
+        "What's one thing you've changed about your diet or routine recently that's made a difference?",
+        "What does your body need more of right now — and what does it need less of?",
+        "What's a physical goal you're quietly working toward?",
+        "When was the last time you felt genuinely well-rested?",
+        "What's one habit you've been meaning to start or stop?"
+      ],
+      questionsNote: "(health-focused)",
+      shy: "Hire a trainer. You're not expected to be an expert — you're the organizer. A good trainer makes the host look prepared. Show up 15 min early and be confident about the space.",
+      variations: "Partner WOD: pairs rotate through partner exercises. Strongman Saturday: heavy compound lifts with scaled options. Sprint & Swim: HIIT cardio + ocean swim. Bodyweight Only: no equipment needed, scales for all fitness levels.",
+      additionalNotes: "One member with a phone captures content — short clips of the workout and group debrief are gold. Send the footage to the group afterward. Yoga instructor can be added for cooldown stretch if the group wants it. Trainer: Nyoman Surya — +62 812-3867-4510 (Hatha/Vinyasa, group rates available)."
     },
-    twoHrNote: "Under 2 hrs including the debrief. Early start means everyone's back by 8:30.",
+    twoHrNote: "Under 2 hrs including debrief. Early start means everyone's back by 8:30.",
     content: true,
     repeatable: true,
-    note: "One member captures content. Everyone gets the footage. Optional yoga instructor add-on for cooldown.",
+    note: "One member captures content. Everyone gets the footage.",
     niche: "Vary the format: 'Partner WOD,' 'Strongman Saturday,' 'Sprint & Swim,' 'Bodyweight Only.'",
-    contacts: "Optional yoga instructor for cooldown stretch: <strong>Nyoman Surya</strong> — +62 812-3867-4510 (Hatha/Vinyasa, group rates available)"
+    tags: null
   },
+
   // ═══════════════════════ BI-WEEKLY ═══════════════════════
   {
-    title: "Cocktail Party",
-    subtitle: "Two-hour cocktail party principle — hard open, hard close",
+    title: "Simple 2-Hour Cocktail Party",
+    subtitle: "Open your door. Run the room. Get known for bringing great people together.",
     time: "2hr",
     freq: "biweekly",
     freqLabel: "Bi-weekly",
     duration: "2 hrs — hard stop",
     category: "social",
-    location: "Member's home or BXB villa",
+    location: "Member's home (BXB villa as fallback only)",
     hosting: {
-      summary: "You bring the drinks and a 15-min structured opener — one question, one game, or one guest intro. Guests arrive on time, leave when it wraps.",
-      structure: "Start on time. Host opens with a welcome and one structured icebreaker (15 min). Open floor networking and drinks (90 min). Host announces 15-min warning. Wrap — hard close. Nobody feels bad leaving, nobody feels pressured to stay.",
-      food: "Gojek/Grab order split equally among attendees. Or host sets a drinks-only format with simple bites.",
-      hostTip: "Shy hosts get a run sheet in advance from the BXB team. The structure does the heavy lifting — you just show up with drinks and press play on the format. Villa access makes this feel premium."
+      tagline: "A man who opens his home, curates the guest list, and runs the room well — that's someone people want to be around. This format makes it dead simple: two hours, structured openers to keep the room moving, hard close so nobody overstays. Minimal prep, minimal cost, maximum impact.",
+      invite: "I'm hosting a simple cocktails + icebreakers at my place — [DATE], [TIME]–[TIME+2HRS]. [ADDRESS]. Casual, come as you are. Drinks, coconuts, and light snacks. There will be structured intros because I want it to be worth your time and I want you to meet everyone. Hard stop at [TIME+2HRS] — then we're walking to [RESTAURANT] for dinner right after for anyone who wants to keep the night going. You in?",
+      setup: "<strong>Drinks:</strong> Two signature drinks are better than a full bar. A bottle of whiskey, a gin + tonic setup, and some beers covers 90% of guys. Grab mixers and ice. Budget: under 500K IDR for 10–12 people.<br><br><strong>Non-alcoholic options — always have these:</strong> Order young coconuts for delivery (15–18K IDR each). Coconut delivery: <strong>Pak Wayan Coconut Delivery</strong> — +62 858-5742-3019 (Canggu area, same-day delivery for orders of 10+, just WhatsApp him the address and quantity by noon). Also stock sparkling water, a jug of cold brew or iced tea, and lime wedges. Not everyone drinks — make sure the non-drinkers feel just as welcome.<br><br><strong>Snacks only — no real food:</strong> The goal is simplicity and conversation. Food makes people sit down, get distracted, and stop talking. Keep it to light grazing snacks on a counter: nuts, tempe crisps, banana chips, chopped fruit (apples, grapes, dragonfruit — whatever's easy). No plates, no utensils, no ordering in. The dinner reservation handles the meal.<br><br><strong>Dinner reservation after (you don't have to attend):</strong> Book a table at the closest walkable spot for exactly the party closing time. A restaurant, a bar with food options — <strong>closest wins over fancy, every time</strong> (within reason). The whole point is that people can walk there in under 2–3 minutes without scattering. As the host, you've done your job by setting up the space and booking the continuation — <strong>attending the dinner is optional for you</strong>. You've already earned your credit. Some hosts will want to go and keep the energy going; others will be spent and want their house back. Both are fine. What matters is that the table exists, so nobody has to scramble for \'where are we going?\' at closing time. Announce it in the invite so people can plan: \'Dinner table booked at [SPOT] right after for anyone who wants to keep the night going.\'<br><br><strong>Name tags:</strong> You don't write these yourself — you're at the door greeting people. Task one core mate to show up 15 min early (or your first guest who arrives) as the official name-tag writer. They station themselves right by the door with a marker and a stack of name tags. Rules for them: large block capitals, <strong>first names only — no nicknames, no goofy variations</strong>. 100% compliance is critical — if one guy has \'TUNA\' on his chest and everyone else has their actual name, the tags stop working. The act of having another man personally write and hand over a name tag is the first warm touch of the night — it's a gesture, not a transaction. Brief your name-tag guy in one line: \'Real first names only, nothing cute, every single person.\'<br><br><strong>The room — this matters:</strong> Push couches and chairs to the walls or out of the main gathering area. Set drinks and snacks on standing-height surfaces (kitchen counter, bar cart, high table). You want people on their feet. Seated conversations are the enemy — they lock people into one spot, create clusters that are hard to enter or exit, and kill the energy of the room. Standing keeps people moving, which keeps conversations fresh. If someone sits down, that's fine — but don't make sitting the default. The room should invite movement.<br><br><strong>Your circle-up signal — get a noisemaker:</strong> You need something fun and unmistakable to call the room's attention for the icebreaker rounds. Bali is full of cheap options given the spiritual and musical culture here. Suggestions:<br>• <strong>Tingsha bells</strong> (Tibetan meditation chimes) — clear, carries across a room, feels intentional. Find them at Ubud spiritual shops (Jalan Hanoman), Mandala Nata in Canggu, or any yoga studio gift shop. 80–150K IDR.<br>• <strong>Singing bowl or mini gong</strong> — striking it once silences a room instantly. Available at spiritual shops in Ubud or Periplus bookstores. 100–200K IDR.<br>• <strong>Harmonica</strong> — funny, unexpected. Rama Kerta music store in Denpasar or most souvenir shops. 20–30K IDR.<br>• <strong>Hand bell or cowbell</strong> — Ubud market, Samadi Bali shop, or any homeware store. 30–80K IDR.<br>• <strong>Wooden clacker or castanets</strong> — Canggu market stalls and surf shops. 25–50K IDR.<br>• <strong>Bike horn</strong> — Ace Hardware or any hardware store. Loud, ridiculous, effective.<br><br>Pick something that reflects your personality. The tingsha bells are sneaky good — they cut through noise without feeling aggressive, and the spiritual-adjacent vibe fits Bali. Whatever you choose, it becomes your signature as a host.<br><br><strong>Music:</strong> Low enough to talk over. Lo-fi, jazz, or chill house. Shoes off is fine in Bali — put a small sign at the door.<br><br><strong>Optional: your IG handle near the exit (for tags, not promo):</strong> Write your Instagram handle on an index card, small chalkboard, or post-it and place it near the door or by where the group photo gets taken — but only in the last 10 minutes, not during the party. Don't announce it, don't push it. This isn't a marketing move — it's purely for guys who want to tag you when they post their story, and for you to be findable if anyone wants to credit you. The subtle placement matters: it signals 'here if you want it, no pressure if you don't.' That reads as confidence, not self-promotion.<br><br><strong>Guest list:</strong> Invite 20–25 to get 15 confirmed. Invite 4–5 core guys first so you have a social safety net in the room — people who will help carry energy and talk to newcomers.",
+      frame: "At the 5-minute mark, once most people have a drink — hit your signal (harmonica, bell, whatever you've got). It gets a laugh and gets attention. Then: 'Alright — quick thing. We're going to do a fast round of intros so everyone knows who's in the room. It takes about 10 minutes and it's worth it. Everyone circle up.' No apology. No 'sorry this is awkward.' State it like it's normal — because in BXB, it is. Then run the first icebreaker.",
+      timeline: [
+        ["0:00", "Doors open. You're at the door — warm welcome, name tag written and handed over immediately. Drinks visible and accessible. Let the room fill for a few minutes. No pressure to mingle yet."],
+        ["0:05", "<strong>First icebreaker round.</strong> Call everyone's attention and circle up. Each man: name, what they're building right now, and one word for how this week has felt. Fast — 30–45 seconds per person. You go first to model the tone and length. This gets every person's voice in the room within the first 10 minutes — that's the unlock. Once someone has spoken in front of the group, they're 10x more likely to approach someone new after."],
+        ["0:20", "Open floor. Conversations happen naturally. Your job now: circulate and make targeted introductions. 'You two need to talk — [Name] is building X and [Name] just went through exactly that.' Never leave a man standing alone for more than 60 seconds. Walk him into a conversation: 'Hey, have you met [Name]?'"],
+        ["0:45", "<strong>Second icebreaker / remix.</strong> This is critical. By 45 minutes, clusters have formed. People are locked into the same conversation they've been in for 20 minutes. Hit the harmonica (or whatever your signal is) — everyone knows it's circle-up time. 'Quick pause — one more round. Lightning question: one thing you're excited about this month. Go.' This breaks up the clusters, re-mixes the room, and integrates anyone who arrived late. Without this reset, the room dies. With it, energy goes back up and new connections form."],
+        ["1:15", "<strong>Optional third remix</strong> if the room needs it. Same format — one quick question, circle up, reset. Not every party needs three rounds. Read the room. If conversations are flowing across groups and people are moving naturally, skip it."],
+        ["1:45", "Last call. Turn lights up slightly, music down one notch. 'Hey everyone — 15 minutes. We're wrapping up soon.' No big announcement, just a clear signal."],
+        ["1:55", "<strong>Group photo — the universal interrupt.</strong> Hit your signal. Call 'Group photo!' — this is the one interrupt that works every time, because nobody refuses a photo. It's the natural mechanism for ending all side conversations simultaneously and gathering the whole room in one spot. Herd everyone to the best wall, window, or backyard. Take 3–4 shots (one will always have someone blinking). <br><br><strong>Recommended format: a host-handheld selfie with the full group behind you.</strong> You're front and center, the group is clearly visible behind. When guys reshare the photo on their stories, it's immediately clear who the host was — no caption needed. That's the visual credit. Take one wide group shot too for the non-selfie people, but lead with the selfie. Have your phone ready — don't fumble with settings."],
+        ["2:00", "<strong>Hard close.</strong> Right after the photo, while everyone's still gathered: 'That's a wrap — thanks for coming. There's a table booked at [SPOT] right now for anyone who wants to keep going. It's a 2-minute walk. I'll drop the photo in the group chat / send a shared album link tonight.' Then stand at the door and thank every man personally as they leave — whether they're heading to dinner or home. That final handshake or hug matters more than you think. It's the last impression."],
+        ["Later that night", "<strong>Share the photo.</strong> Post it to a shared Google Photos album (create one, paste the link in the BXB group chat or a dedicated event thread) so everyone can view and download their own copy without cluttering anyone's WhatsApp. Or post directly to BXB Circle under a home gatherings thread. The photo becomes the memento — and the next invite you send, it reminds everyone the last one was a good night.<br><br><strong>If you post your own story</strong>, politely ask anyone who also posts to tag you when they share. Low-key: 'Tag me if you post it — I want to see your angles.' That's it. Let the guys opt into the social credit on their own."]
+      ],
+      questions: [
+        "Name, what you're building, and one word for your week.",
+        "What's the most interesting thing that happened to you in the last 30 days?",
+        "What's one thing you're better at now than you were a year ago?",
+        "What's a problem you're actively trying to solve in your business right now?",
+        "What's one thing you're excited about this month?"
+      ],
+      questionsNote: "(use one per round — you only need 2–3 for the whole night)",
+      shy: "You don't need to be the life of the party. You need to do three things: greet warmly at the door, write name tags, and call the icebreaker rounds. That's it. Read the frame script above word for word if you need to — nobody will know the difference. The structure IS the event. You're just the guy who holds it. And honestly, hosting at home is easier than hosting at a venue — you control the space, the timing, and the vibe. No waitstaff, no bill splitting, no reservation drama.",
+      variations: "Investor Mixer: invite business contacts or friends who aren't in the group — you become the connector. Bring a Non-Member: each member brings one guest, doubling the room and the introductions. Whiskey & Wisdom: pick a whiskey, pour for the group, and give a 3-minute story about it before the first icebreaker. Rooftop Q&A: bring a guest expert (investor, founder, mentor) and do a 20-min structured Q&A before open floor. Theme night: 'Bring a business book you'd recommend' — small hooks elevate a good party to a memorable one.",
+      additionalNotes: "<strong>Why it has to be a home — not a venue:</strong> A restaurant, rooftop, or rented space is a transaction. Opening your home is a gesture. It says: I trust you enough to bring you into my space, and I thought enough of this group to put it together. The guys who host at home get remembered differently — even if your home is small, even if it's modest, even if you're packing 12 men into a living room meant for 4. <strong>Trust us on this: a cramped home gathering creates more meaning and impact than any third-party venue ever will.</strong> The constraint is the feature. When people are close, they talk. When they're in someone's actual space — with his books on the shelf, his coffee cups, his life visible around them — it feels real in a way a rented rooftop never will. If you're worried your place is too small, it's not. Invite fewer people if you have to, but keep it in a home.<br><br><strong>Why the periodic circle-ups matter:</strong> Left alone, any room settles into static clusters within 20–30 minutes. People sit down, lock into one conversation, and the party energy flatlines. The icebreaker rounds (every 30–45 minutes) are the mechanism that breaks those clusters, re-mixes the room, and gives everyone a natural reason to start a new conversation. Without them, half the room never meets the other half. With them, every person in the room has been introduced and had their voice heard. That's the difference between a forgettable hangout and a night people talk about.<br><br><strong>Why the group photo is the close:</strong> The hardest part of ending a party on time is interrupting conversations people are enjoying. 'It's time to wrap up' always feels abrupt. 'Group photo!' is the one interrupt that works universally — nobody refuses a photo. It gets everyone moving to the same spot at the same time, which ends every side conversation simultaneously. The photo IS the hard-close mechanism, not just a nice-to-have. It also becomes the memento that reminds people the night mattered.<br><br><strong>Location:</strong> Your home, always. Even if it's modest — especially if it's modest. For members who are renting short-term or don't have the space, the BXB villa is the only non-home alternative — but the home version is always the stronger move."
     },
-    twoHrNote: "Two-hour cocktail party principle in full effect. Structured opener, open floor, hard close.",
+    twoHrNote: "Two hours. Hard open, hard close. Everyone shows up on time, nobody overstays, and the host looks like a pro.",
     content: true,
     repeatable: true,
-    note: "Shy hosts get a run sheet in advance. The structure does the heavy lifting — host just shows up with drinks.",
+    note: "Shy hosts get a run sheet in advance. The structure does the heavy lifting — you just hold it.",
     niche: "Theme it: 'Investor Mixer,' 'Bring a Non-Member,' 'Whiskey & Wisdom,' 'Rooftop Q&A with a Guest.'",
-    contacts: null
+    tags: null
   },
+
   {
     title: "AI Workshop — Live Build",
     subtitle: "One tool. One use case. Built live in the room.",
@@ -625,18 +718,30 @@ const events = [
     category: "growth",
     location: "Coworking space or BXB villa",
     hosting: {
-      summary: "Pick one AI tool. Pick one real use case. Build it live in front of the group. Not a talk — a build.",
-      structure: "20 min: Intro — what the tool does and why you chose it. 60 min: Live build — screen shared, building in real time with the group following along or building alongside. 40 min: Q&A, share-out, and how others can apply it to their business.",
-      food: null,
-      hostTip: "Don't overthink it. Pick a tool you actually use. Solve a real problem. The messier the live demo, the more people learn. If something breaks, that's content."
+      tagline: "Pick a real problem you solve with AI. Build it live while everyone watches and learns.",
+      invite: "[DATE] 6:30pm — AI Workshop at [LOCATION]. I'm building [REAL USE CASE] live using [TOOL] — come see how it works and ask questions. No experience needed, all levels welcome. [ADDRESS]. Let me know if you're coming.",
+      setup: "Pick one AI tool you actually use (Claude, ChatGPT, Make, etc.). Pick one real problem you solve — something you do in your actual business. Build a working draft or demo before the day so you know what the steps are. Test screen sharing.",
+      frame: "Once everyone sits: 'What we're doing today: I use [TOOL] to [SOLVE PROBLEM]. I'm going to show you exactly how, building it live. You're going to see me fail, fix it, and figure it out in real time. That's the whole point — the messy part is the valuable part. Questions anytime.'",
+      timeline: [
+        ["0:00", "Host opens with context: what the tool is, why it's useful, what problem you're solving (5 min)."],
+        ["0:05", "Live build — screen shared. Host narrates every step: 'Here's what I'm doing, here's why, here's what usually happens...' (50 min)."],
+        ["0:55", "Results demo — show the output, what it does, how you use it (5 min)."],
+        ["1:00", "Q&A and share-out: 'How would you use this in your business?' (60 min). Take questions, share use cases, help people think through applications."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "Don't overthink it. Pick a tool you actually use. Solve a real problem. The messier the live demo, the more people learn. If something breaks, that's content — troubleshoot it live and people learn how to problem-solve.",
+      variations: "Automate Lead Follow-Up with Claude, Build a VSL Script with AI, AI Content Repurposing Pipeline, Chatbot for Your Offer, AI Email Copywriting, Video Transcription + Repurposing.",
+      additionalNotes: "Host comes with a working draft, not starting from zero. Show them a realistic workflow, not a perfect polished demo. Each host picks a different tool to avoid duplication. This compounds knowledge across the group over time."
     },
-    twoHrNote: "Hard 2-hr cap. 20 min intro, 60 min build, 40 min Q&A and share-out.",
+    twoHrNote: "Hard 2-hr cap. 5 min intro, 50 min build, 60 min Q&A and share-out.",
     content: true,
     repeatable: false,
     note: "Each host owns a different tool. Compound knowledge across the year.",
     niche: "Examples: 'Automate Lead Follow-Up with Claude,' 'Build a VSL Script with AI,' 'AI Content Repurposing Pipeline,' 'Chatbot for Your Offer.'",
-    contacts: null
+    tags: null
   },
+
   {
     title: "Surfing Session",
     subtitle: "Two groups — coached beginners + free surf",
@@ -647,21 +752,38 @@ const events = [
     category: "fitness",
     location: "Batu Bolong or Old Man's — Canggu",
     hosting: {
-      summary: "Book an instructor for beginners. Confirm board count for all levels. Intermediate+ self-organize. Everyone meets on the beach.",
-      structure: "Meet on the beach. Beginners go with the instructor. Intermediate/advanced paddle out together. Regroup after 90 min. Post-surf smoothie is optional and unstructured. Starts and ends on the sand.",
-      food: null,
-      hostTip: "The experience gap is real — splitting into two groups solves it. Don't try to coach if you're not qualified. Book the instructor and let them handle it. Your job is logistics."
+      tagline: "Split into two groups by level. Beginners get coached, intermediates/advanced paddle out together.",
+      invite: "[DATE] [TIME] at [BEACH]. If you're a beginner or haven't surfed in a while, you're with an instructor. If you're intermediate+, you're paddling out with the group. Either way, meet on the sand, regroup after 90 min. Optional smoothie after. Let me know your level.",
+      setup: "Book a beginner instructor ($50–80 for the group). Confirm board count — enough for beginners plus any rentals for others. Check the swell forecast and pick a mellow beach for the day.",
+      frame: "Once everyone's on the sand: 'Here's how this goes: beginners, you're with [INSTRUCTOR] over there. You'll learn the basics and get some waves. Intermediate and advanced, you paddle out together, stick as a group, and regroup after 90 min. Everyone on the beach at [TIME]. Sound good? Let's go.'",
+      timeline: [
+        ["0:00", "Everyone on the beach. Beginners and instructors head to the lesson area. Intermediate+ do a quick gear check and paddle out."],
+        ["0:05", "Beginner lesson: board positioning, pop-up, paddle techniques (60 min). Free surfers catch waves."],
+        ["1:05", "Beginners and instructors come in. Everyone regroups on the beach."],
+        ["1:15", "Optional debrief: 'How did it go? What did you learn?' (5 min). Then optional smoothie spot nearby or everyone heads home."]
+      ],
+      questions: [
+        "Other than surfing, what's a skill you're actively working on right now?",
+        "What's something physical you want to be able to do by the end of the year?",
+        "When did you last push your comfort zone with something your body had to learn?",
+        "What's the best thing you've done for your health since moving to Bali?"
+      ],
+      questionsNote: null,
+      shy: "Book the instructor. You're not expected to teach — they handle that. Your job is to organize the logistics and make sure the two groups stay on track. Show up 15 min early to scout conditions.",
+      variations: "All-levels group paddle: everyone surfs together regardless of level. Beginner-only session: instructor guides everyone, no split. Intermediate progression: instructor works with intermediate group on technique while beginners self-organize.",
+      additionalNotes: "The experience gap is real — splitting into two groups solves it. Book the instructor and let them handle it. Your job is logistics. Post-surf smoothie is optional and unstructured. Instructors: Made Surya — +62 813-3850-2211 (Old Man's local, 10+ yrs teaching, up to 6 boards), Ketut Arta — +62 857-3921-6640 (Batu Bolong, patient with beginners, can bring 8 boards), Bali Surf School — +62 878-6100-9927 (larger groups, all gear included)."
     },
     twoHrNote: "Starts and ends on the beach. Two groups run simultaneously — coached and free surf.",
     content: true,
     repeatable: true,
     note: "Solves the experience gap. Post-surf smoothie is optional and unstructured.",
     niche: null,
-    contacts: "Surf instructors (beginner-friendly, group rates):<br><strong>Made Surya</strong> — +62 813-3850-2211 (Old Man's local, 10+ yrs teaching, up to 6 boards)<br><strong>Ketut Arta</strong> — +62 857-3921-6640 (Batu Bolong, patient with beginners, can bring 8 boards)<br><strong>Bali Surf School</strong> — +62 878-6100-9927 (larger groups, all gear included)"
+    tags: null
   },
+
   {
-    title: "Recovery — Ice Bath + Sauna",
-    subtitle: "Low-effort, high-connection",
+    title: "Fire & Ice — Recovery Day",
+    subtitle: "Hot Seat / Cold Seat format. Four rounds: fire, ice, fire, ice.",
     time: "2hr",
     freq: "biweekly",
     freqLabel: "Bi-weekly",
@@ -669,22 +791,42 @@ const events = [
     category: "wellness",
     location: "Rotating wellness venues — Canggu",
     hosting: {
-      summary: "Book the facility for the group. Negotiate one group rate. Show up.",
-      structure: "Arrive. Brief intro for first-timers on the protocol (hot/cold cycles). Everyone does their own thing. Conversation happens naturally between rounds. No facilitation needed — the environment does the work.",
-      food: null,
-      hostTip: "Easiest event to host. Book it, send the address, show up. Best conversations happen in the cold plunge."
+      tagline: "Structured sauna and cold plunge with facilitated conversation. Four rounds — fire, ice, fire, ice. The sauna is for talking, the plunge is for honesty.",
+      invite: "This [DAY] — Fire & Ice at [VENUE], [TIME]. Sauna, cold plunge, deep conversation. Four rounds. Space limited to [X]. Confirm your spot. [ADDRESS].",
+      setup: "Book a venue with both sauna and cold plunge. Ideally 6–10 guys. Have a phone with the 1–365 question bank loaded (PDF or list). Towels sorted. Venue should be private or semi-private so you can run the format without interruption.",
+      frame: "When everyone is seated in the sauna: 'Tonight we're running Fire & Ice. Four rounds — two sauna, two cold plunge. The sauna is for talking. The plunge is for honesty. No phones, no pitch mode — just real conversation. Everything said in here stays in here.'",
+      science: "The sauna warm-up is intentional — core body temperature elevation increases blood flow and relaxes the nervous system, reducing social anxiety and making genuine conversation easier. Cold plunge triggers a noradrenaline spike of up to 300%, which creates heightened alertness and emotional intensity. That's why answers from the cold plunge are almost always more honest than anything said in a comfortable chair. The sequence is physiologically designed to get men out of their heads.",
+      timeline: [
+        ["0:00", "FIRE — Enter sauna. Host sets the frame (2 sentences max). Round 1: each man introduces himself — name, what he does, what he's been focused on this past week. Keep it moving, 60–90 seconds per person."],
+        ["0:18", "ICE — Rinse and move to the cold plunge. One man in at a time. 3-minute timer starts when they enter. They pick a number 1–365. The man on the timer reads that question from the question bank. They answer for 3 minutes. The group listens — no crosstalk, no advice, just presence. Rotate through as many as time allows."],
+        ["~0:50", "FIRE — Back to the sauna. Round 2: each man states one thing he's working on or needs help with this week. The group listens, then responds — offers, resources, ideas, connections. Host keeps it moving so everyone gets a turn."],
+        ["~1:15", "ICE — Final cold plunge. Shorter round. Each man states one intention or commitment for the week while in the cold. Quick, honest, direct. No discussion — just declarations."],
+        ["1:30", "Close. Host reads one sentence — a challenge or intention for the group. Optional group commitment: 'Who's in?' Dismiss with handshakes, not a rush."]
+      ],
+      questions: [
+        "What would you do if you knew you couldn't fail?",
+        "What's something you know now that you wish you'd known at 25?",
+        "What are you pretending not to know?",
+        "When did you last feel genuinely proud of yourself?",
+        "What's the hardest conversation you're avoiding right now?"
+      ],
+      questionsNote: "(used during the cold plunge rounds — pick from the 1–365 bank or use these)",
+      shy: "You don't need to be sharp or funny in the sauna. You just hold the space. Set the frame, start the timer, read the question. The format does the work — your job is to protect it. Read the frame script word for word if you need to.",
+      variations: "If held on a weekday evening, swap Round 2 from 'week ahead' to 'what's one thing you'd do differently this month.' Wim Hof breathing between rounds for an added layer. Or run a silent final plunge — no talking, just presence.",
+      additionalNotes: "Venue ideas: Canggu Ice Bath Co., Finns Recreation Club (sauna + plunge), private villa with portable ice bath setup. The four-round structure (fire → ice → fire → ice) is the key differentiator. Ending on ice means the last thing every man does is make a declaration while uncomfortable. That's what they remember."
     },
-    twoHrNote: "90 min in the venue. Conversation happens naturally. No facilitation needed.",
+    twoHrNote: "90 min including all four rounds. Conversation is built into the structure — no separate facilitation needed.",
     content: false,
     repeatable: true,
-    note: "Low-effort, high-connection. Some of the best conversations happen in a cold plunge.",
+    note: "Four rounds: fire, ice, fire, ice. The sauna opens people up. The plunge makes them honest. One of the most talked-about events in the calendar.",
     niche: null,
-    contacts: null
+    tags: null
   },
+
   // ═══════════════════════ MONTHLY ═══════════════════════
   {
     title: "Pádel Tournament",
-    subtitle: "4-person round robin with running leaderboard",
+    subtitle: "Round robin or Americano format — choose your competition style",
     time: "2hr",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -692,21 +834,36 @@ const events = [
     category: "sport",
     location: "Bali Padel Center — Kerobokan",
     hosting: {
-      summary: "Reserve courts. Build the bracket. Send it before the day. Show up and run it.",
-      structure: "Arrive. Quick warm-up (10 min). Round robin matches on 2 courts (80 min). Final match (20 min). Scores recorded on running leaderboard. Winner gets bragging rights until next month.",
-      food: null,
-      hostTip: "4-person round robin fits in 2 hrs with 2 courts. The format is set — you just execute. Print the bracket and bring a marker."
+      tagline: "Pick a format. Build the bracket. Run it. Running leaderboard makes it memorable.",
+      invite: "[DATE] [TIME–TIME+2HRS] — Pádel tournament at [LOCATION]. We're doing [ROUND ROBIN / AMERICANO] format. 4-person pairs competing. Sign up and I'll build the bracket. [ADDRESS]. Let me know your level and if you want to play.",
+      setup: "Reserve 2 courts for 2 hrs. Build the bracket in advance — print it out and bring a marker. Decide on the format: Round Robin (every pair plays every other pair, combined points) or Americano (random partner draw each round, individual points accumulate, use the free 'Pádel Americano' app for automatic bracket).",
+      frame: "Once people arrive: '[BRACKET EXPLANATION]. This is a [2-hour / 90-min] tournament. We'll run three rounds back-to-back. Points accumulate on the board. Top 3 get announced at the end. Let's warm up and then we're off.'",
+      timeline: [
+        ["0:00", "Warm-up on the courts (10 min)."],
+        ["0:10", "Round 1: pairs play each other (20 min per match)."],
+        ["0:30", "Round 2: next set of pairings (20 min per match)."],
+        ["0:50", "Round 3: final round (20 min per match)."],
+        ["1:10", "Tiebreaker if needed (10 min)."],
+        ["1:20", "Final scores tabulated. Top 3 announced with dramatic flair."],
+        ["1:25", "Optional: post-tournament drinks/snacks."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "Host just executes the bracket you prepped. The format is set. Bring a tablet or printed bracket and a marker. You're the scorekeeper.",
+      variations: "Round Robin: every pair plays every other pair, combined points determine the winner. Americano: random partner draw each round, individual points accumulate (use the free 'Pádel Americano' app on iOS/Android for automatic bracket generation and scoring).",
+      additionalNotes: "Host chooses the format in advance and announces it with the invite so people know what to expect. Running leaderboard across months creates ongoing stakes and makes hosting feel prestigious. Winner gets bragging rights until the next month."
     },
-    twoHrNote: "4-person round robin fits in 2 hrs with 2 courts. Format is set — host just executes.",
+    twoHrNote: "Format is set — host just executes. 2 courts fit the round robin in 2 hours.",
     content: true,
     repeatable: true,
     note: "Running leaderboard across months creates ongoing stakes. Winner gets hosting bragging rights.",
     niche: null,
-    contacts: null
+    tags: null
   },
+
   {
     title: "Billiards + Darts — Combined Score",
-    subtitle: "Two games, one leaderboard — more interesting than either solo",
+    subtitle: "Each night is its own event. Ceremonial prize giving is the payoff.",
     time: "2hr",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -714,21 +871,36 @@ const events = [
     category: "sport",
     location: "Private billiards venue — Seminyak",
     hosting: {
-      summary: "Book tables and dartboards. Print the combined scoring sheet. Run the bracket.",
-      structure: "Two games, one combined leaderboard. 45 min billiards round. 45 min darts round. 30 min final combined scores, tiebreakers, and bragging rights. Points from both games add up — you can't just be good at one.",
-      food: null,
-      hostTip: "The combined scoring is what makes this interesting. Prepare the scoring sheet in advance. It's a pub night with stakes."
+      tagline: "Two games, one leaderboard, one winner, and WWE-style prize ceremony.",
+      invite: "[DATE] [TIME–TIME+2HRS] at [LOCATION]. Billiards + darts combined scoring — one night, one winner. Each player plays one round of each. I'm bringing a small prize for the winner. [ADDRESS]. Let me know if you're in.",
+      setup: "Book 2–3 tables and dartboards for 2 hrs. Prepare a scoring sheet with both games combined. Pick a small symbolic prize: Ettore Gelato gift certificate (best gelato in Bali, ~53K IDR for a scoop), Dang! Cookies voucher, or something from the venue. The prize isn't about money — it's the ceremony.",
+      frame: "Once everyone arrives: 'Here's how tonight goes: you're going to play one round of billiards and one round of darts. Your scores from both games combine on one leaderboard. Billiards first, then darts, then we tally the combined scores. Top 3 get announced WWE-style with some flair. Let's get to it.'",
+      timeline: [
+        ["0:00", "People arrive, break balls for billiards."],
+        ["0:05", "Billiards round (45 min) — everyone plays one game or a series of games, scores tallied."],
+        ["0:50", "Transition to darts."],
+        ["0:55", "Darts round (45 min) — everyone plays, scores tallied."],
+        ["1:40", "Tally combined scores."],
+        ["1:50", "Host announces 3rd, 2nd, 1st place with dramatic flair. 'In third place... [pause]... [NAME]!' Work up to the winner. Hand over the prize. People take photos. This moment is what they remember all week."],
+        ["2:00", "Wrap or move to a bar nearby."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "No facilitation needed. You're running the bracket and the ceremony. The ceremony IS the content — make it dramatic and fun. Announce names like you're introducing a champion.",
+      variations: "Best of 3 rounds instead of one. Team play instead of individual. Progressive rounds with higher stakes. Loser's bracket for a second-place trophy.",
+      additionalNotes: "Each night is a standalone event — no season concept, attendees vary too much. The ceremony is what people remember and talk about. The prize doesn't need to be expensive (a gelato cert is ~$3). It's the presentation that matters. Combined scoring makes it interesting because you can't just be good at billiards — you need to be decent at darts too."
     },
-    twoHrNote: "Two games, one leaderboard, 2-hour window. Unique enough that people talk about it.",
+    twoHrNote: "Two games, one leaderboard, 2-hour window. The ceremony is the payoff.",
     content: true,
     repeatable: true,
     note: "Combined scoring across both games makes it more interesting than either solo.",
     niche: null,
-    contacts: null
+    tags: null
   },
+
   {
     title: "Boxing — Group Pads Session",
-    subtitle: "Trainer runs it — just show up and throw hands",
+    subtitle: "Trainer runs it. Host runs the logistics. Content is automatic.",
     time: "2hr",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -736,21 +908,36 @@ const events = [
     category: "fitness",
     location: "Legends MMA or Bali Fight Lab — Canggu",
     hosting: {
-      summary: "Book the group pads session. Confirm equipment and headcount. Show up — trainer runs the session.",
-      structure: "10 min warm-up (trainer-led). 60 min pads work — rotating partners, combo drills, body shots. 20 min cooldown and group photo. Pads work only — more fun, no liability.",
-      food: null,
-      hostTip: "The trainer does the heavy lifting. You handle logistics — booking, headcount, confirmation. Group shot post-session is a great content moment."
+      tagline: "Book the trainer. Show up. Trainer does the heavy lifting. You do the closing.",
+      invite: "[DATE] [TIME] — Group boxing pads session at [LOCATION]. [TRAINER] is leading. We'll do 60 min of pads work, combo drills, body shots. All levels welcome. [ADDRESS]. Bring a towel. Let me know you're in.",
+      setup: "Call the gym and book a group pads session. Confirm headcount, how many pads/trainers available. Pay in advance if possible.",
+      frame: "Once everyone arrives, the trainer sets up. After the session: 'Great work everyone. Quick group photo and we're out.' Get the group together for a content shot.",
+      timeline: [
+        ["0:00", "People arrive and wrap hands / gear up."],
+        ["0:10", "Warm-up — light cardio, dynamic stretches (trainer-led)."],
+        ["0:15", "Pads work — partner rotations, combo drills, body shots (60 min)."],
+        ["1:15", "Cooldown and stretch (10 min)."],
+        ["1:25", "Group photo (content moment)."],
+        ["1:27", "Host thanks the trainer publicly. Quick fist-bump circle or similar."],
+        ["1:30", "Host mentions: 'If anyone wants to grab a smoothie or coconut at [SPOT NEARBY], we're heading over. No pressure.' Optional post-session hangout."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "The trainer does all the coaching and facilitation. You handle logistics — booking, headcount, confirmation. After the session, your job is two things: (1) get a group photo for content, (2) thank the trainer publicly and suggest a post-session spot nearby.",
+      variations: "Heavy bag work instead of pads. Muay Thai pads session. Women + men mixed group. Beginner-focused vs. advanced conditioning.",
+      additionalNotes: "Debrief or deep questions are optional — not every event needs that. The group photo and the ceremonial closing (fist-bump circle, thanks to the trainer) are the moments people remember. Coach Dewa — +62 819-1677-3302 (Legends MMA, group pads sessions, all levels, gear provided)."
     },
     twoHrNote: "Under 2 hrs. Pads work only — more fun, no liability. Trainer does the heavy lifting.",
     content: true,
     repeatable: true,
     note: "Content angle is automatic. Group shot post-session is a good visual.",
     niche: null,
-    contacts: "Boxing coach: <strong>Coach Dewa</strong> — +62 819-1677-3302 (Legends MMA, group pads sessions, all levels, gear provided)"
+    tags: null
   },
+
   {
     title: "Paintball — 2hr Block",
-    subtitle: "Pre-assigned teams to mix cliques",
+    subtitle: "Pre-assigned teams. Loser's gauntlet. Standalone event each time.",
     time: "2hr",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -758,18 +945,36 @@ const events = [
     category: "adventure",
     location: "Paintball Bali — Kerobokan (~20 min from Canggu)",
     hosting: {
-      summary: "Book the field. Pre-assign teams — mixing members to break cliques. Confirm gear rental.",
-      structure: "Meet at venue. Gear up (15 min). 3–4 rounds (75 min). Debrief + GoPro footage review (15 min). Teams assigned in advance by the host — the goal is to mix people who don't know each other well.",
-      food: null,
-      hostTip: "Pre-assigning teams is the move. Mix the cliques — that's where the bonding happens. GoPro content is built in."
+      tagline: "Teams. Matches. Gauntlet. Each game is its own event with a ceremony at the end.",
+      invite: "[DATE] [TIME] — Paintball at [LOCATION]. We're doing 3–4 matches with teams I'll assign in advance. Losing team runs the gauntlet at the end. Bring a water bottle, come ready to get hit. Address: [ADDRESS]. Let me know you're in.",
+      setup: "Book the field for a 2-hour block. Pre-assign teams before the day — mix members from different circles to break cliques. This is the strategic part. Confirm gear rental for all players.",
+      frame: "Once everyone arrives and gears up: 'Teams are assigned already so we mix it up. We're doing 3–4 matches. Winning team accumulates points. Losing team after each match does a fun thing [optional]. Then we'll wrap with drinks/coconuts. Let's go.'",
+      timeline: [
+        ["0:00", "Arrive at venue. Brief safety talk from staff (5 min)."],
+        ["0:05", "Gear up (10 min)."],
+        ["0:15", "Match 1 (15–20 min). Keep score."],
+        ["0:35", "Quick reset."],
+        ["0:40", "Match 2 (15–20 min)."],
+        ["1:00", "Match 3 (15–20 min)."],
+        ["1:20", "Optional Match 4 if time allows."],
+        ["1:40", "Final tally. Losing team runs the gauntlet — they sprint between two markers while the winning team fires away (2 min of hilarity). Not painful, just fun and ceremonial."],
+        ["1:45", "Debrief + GoPro footage review (10 min)."],
+        ["1:55", "Head to drinks/coconuts nearby."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "You assigned the teams in advance, so there's no favoritism argument. Your job is to run the bracket and make sure people stick to the format. The gauntlet is the ceremonial ending.",
+      variations: "Capture the flag format. Team vs. team single-elimination. One-vs-one tournament bracket. Gauntlet becomes an obstacle course if space allows.",
+      additionalNotes: "Each match is standalone — no season concept. Teams vary week to week so there's no carryover frustration. Pre-assigning teams is the move because it mixes people who don't know each other well and breaks existing cliques. The losing team's gauntlet is ceremonial and fun — it's the payoff moment people remember. Change drinks to drinks/coconuts to capture the Bali vibe."
     },
-    twoHrNote: "Venue is 20 min away. 2-hr session on-site. Realistic total: ~3 hrs door-to-door — flag it upfront.",
+    twoHrNote: "Venue is 20 min away. 2-hr session on-site. Realistic total: ~3 hrs door-to-door.",
     content: true,
     repeatable: true,
     note: "Host assigns teams to break existing cliques. GoPro content is built in.",
     niche: null,
-    contacts: null
+    tags: null
   },
+
   {
     title: "Sunset Yoga — Private Instructor",
     subtitle: "Premium feel, split cost is nothing",
@@ -780,21 +985,76 @@ const events = [
     category: "wellness",
     location: "Seminyak Beach or BXB villa",
     hosting: {
-      summary: "Source and book the instructor. Confirm location and headcount 48 hrs out. Show up.",
-      structure: "Arrive. Instructor leads a 75-min flow class (Vinyasa/Hatha). 15 min savasana and closing. Sunset timing does all the ambience work. Host just handles the booking.",
-      food: null,
-      hostTip: "Private class at sunset feels premium and costs almost nothing split across the group. Pick a beachfront spot or the villa rooftop."
+      tagline: "Book an instructor. Host the class at sunset. Ambience does all the work.",
+      invite: "[DATE] at sunset — Private yoga class at [LOCATION]. Instructor is leading 75 min of Vinyasa/Hatha flow. Cost is [SPLIT PRICE]. Bring a mat if you have one, or we have extras. [ADDRESS]. Let me know you're coming.",
+      setup: "Research yoga instructors who do group classes. Book one for a specific sunset time. Confirm headcount and mat availability. Choose a beachfront or rooftop location for max ambience.",
+      frame: "Once the instructor is ready: 'This is a 75-min flow class with [INSTRUCTOR]. We'll do some warm-up, main flow, and end with savasana. Just follow along at your own pace. This is low-key — you can go as deep or as light as you want.'",
+      timeline: [
+        ["0:00", "Everyone arrives and sets up mats."],
+        ["0:05", "Opening circle and intention-setting (5 min)."],
+        ["0:10", "Warm-up: breathing and gentle stretches (10 min)."],
+        ["0:20", "Main flow: Vinyasa or Hatha sequence (45 min). Guided by instructor."],
+        ["1:05", "Wind-down poses and breathing (5 min)."],
+        ["1:10", "Savasana — lying meditation (10 min). Instructor guides."],
+        ["1:20", "Closing and oms. People slowly get up, chat, head home or grab food."]
+      ],
+      questions: [
+        "Set an intention for today's practice — one word or phrase.",
+        "What are you letting go of on the mat today?",
+        "Where in your body are you holding tension right now?",
+        "What does stillness mean to you — and when did you last experience it?"
+      ],
+      questionsNote: null,
+      shy: "The instructor does all the leading. You're just the person who booked and coordinated. Show up, greet people, introduce the instructor. Let the sunset and the class do the rest.",
+      variations: "Beginner-focused gentle flow. Advanced power yoga. Breathwork emphasis. Partner yoga (acro yoga). Sound bath + yoga combo. Candlelit evening session.",
+      additionalNotes: "Private class at sunset feels premium and costs almost nothing split across 10–12 people (~$5–8/person). Pick a beachfront spot or the villa rooftop for ambience. Questions should be yoga-class appropriate — intention-setting language, more embodied/practice-oriented, less business. Instructor: Nyoman Surya — +62 812-3867-4510 (Hatha/Vinyasa, sunset sessions, up to 12 people, mats provided)."
     },
     twoHrNote: "90 min class. Sunset timing does all the ambience work.",
     content: true,
     repeatable: true,
     note: "Private class at sunset feels premium and costs very little split across the group.",
     niche: null,
-    contacts: "Yoga instructor: <strong>Nyoman Surya</strong> — +62 812-3867-4510 (Hatha/Vinyasa, sunset sessions, up to 12 people, mats provided)"
+    tags: null
   },
+
+  {
+    title: "Golf — 9 Holes + Breakfast",
+    subtitle: "The post-round breakfast is where the real conversations happen",
+    time: "half",
+    freq: "monthly",
+    freqLabel: "Monthly",
+    duration: "4–5 hrs",
+    category: "sport",
+    location: "Nirwana Bali Golf Club or New Kuta Golf",
+    hosting: {
+      tagline: "Nine holes keeps it accessible. Breakfast after is the real event. Simple scorecard, memorable experience.",
+      invite: "[DATE] [TIME] tee off — 9 holes + breakfast at [COURSE]. Difficulty level is [easy/medium/hard]. Cost: [GREEN FEE] + [BREAKFAST SPLIT]. Carts included. If you want to golf, sign up. If you're new to golf, still come — we'll keep it light. [ADDRESS]. Let me know your handicap if you have one.",
+      setup: "Call the course and book a tee time 48 hrs in advance. Confirm cart availability and pricing. Reserve a table for breakfast afterward at the club restaurant. Prepare a simple scorecard or use the course's card.",
+      frame: "At the tee box: 'We're doing 9 holes. This is low-key — no pressure. Golf a few, chat a few. Main thing: after the round, breakfast at the club is where the real networking happens. That's the event. Golf is just the excuse to be here. Let's have fun.'",
+      timeline: [
+        ["0:00", "Meet at the clubhouse. Get carts, head to the first tee (10 min)."],
+        ["0:10", "Play holes 1–9 (~2.5–3 hrs depending on course/pace)."],
+        ["3:10", "Finish round. Head to the club restaurant."],
+        ["3:20", "Breakfast at the club — casual, everyone orders their own. Conversations flow naturally."],
+        ["4:20", "People head home or stay for another drink."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "9 holes keeps it short and accessible — even non-golfers can enjoy it without feeling like a liability. The breakfast is the real event. Your job is just to book it and show up confident.",
+      variations: "Best Shot format: team plays from the best ball each hole. Skins: each hole is worth a point, tied holes carry over. Simple stroke play with handicap adjustments. Or just casual — no format, just conversation.",
+      additionalNotes: "Whatever format you choose, adding some intentionality makes it memorable for the guys — especially the ones still learning golf. Jeffersonian is just one suggestion. At breakfast, announce the top 3 scores with fun flair. It might sound silly, but the presentation IS the payoff. Keep it light and fun — the memory sticks with people all week. Book tee times early — they fill up fast."
+    },
+    twoHrNote: null,
+    content: true,
+    repeatable: true,
+    note: "9 holes keeps it accessible. Post-round breakfast is the real event.",
+    niche: null,
+    tags: null
+  },
+
   {
     title: "Archery Session",
-    subtitle: "Competition format with small prize",
+    subtitle: "Competition format with small prize. Four game options.",
     time: "2hr",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -802,21 +1062,37 @@ const events = [
     category: "sport",
     location: "Bali Archery — Kerobokan area",
     hosting: {
-      summary: "Book the range. Set the competition format (3 rounds, best cumulative score). Small prize for the winner.",
-      structure: "Quick safety brief from staff (10 min). Practice round (15 min). 3 scored rounds (60 min). Final shootout for top 3 (20 min). Winner announced. Running leaderboard across months.",
-      food: null,
-      hostTip: "Staff handles instruction. You handle the bracket and scoring. A small prize (buy the winner lunch) makes it memorable."
+      tagline: "Pick a format. Run a tournament. Award a small prize. Simple, competitive, memorable.",
+      invite: "[DATE] [TIME–TIME+2HRS] — Archery competition at [LOCATION]. Format is [ELIMINATION / CLOSEST TO CENTER / TEAM / PROGRESSIVE]. I'm bringing a small prize for the winner. [ADDRESS]. All levels welcome. Let me know you're in.",
+      setup: "Call the range and book. Decide on the format in advance: Elimination (lowest score each round is eliminated until one remains), Closest to Center (single arrow, closest to bullseye wins), Team Scoring (split into teams of 2–3, combined team score), or Progressive Distance (start close, move back each round).",
+      frame: "Once everyone arrives: 'Today we're doing [FORMAT]. Here's how it works: [EXPLAIN]. Three rounds, I'm keeping score. Closest to [WINNER CRITERIA] wins. Prize is [SMALL PRIZE]. Let's get started.'",
+      timeline: [
+        ["0:00", "Safety briefing from staff (10 min)."],
+        ["0:10", "Practice round — everyone shoots (15 min)."],
+        ["0:25", "Round 1 (20 min)."],
+        ["0:45", "Round 2 (20 min)."],
+        ["1:05", "Round 3 (20 min)."],
+        ["1:25", "Tiebreaker if needed (10 min)."],
+        ["1:35", "Winner announced. Prize handed over."],
+        ["1:40", "Wrap or extend with drinks nearby."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "Staff handles instruction. You handle the bracket and scoring. A small prize (Ettore Gelato cert or similar, ~$3) makes it memorable without being expensive.",
+      variations: "Elimination: lowest score each round is out until one remains. Closest to Center: single arrow, closest to bullseye wins (quick sudden-death format). Team Scoring: split into teams of 2–3, combined team score. Progressive Distance: start close, move back each round.",
+      additionalNotes: "Running leaderboard across events keeps it interesting. Host chooses the format and announces it with the invite. Compact format works for busy schedules, competitive enough to be interesting."
     },
     twoHrNote: "2 hrs on-site. Compact format — no travel needed if using a Canggu-area range.",
     content: true,
     repeatable: true,
     note: "Running leaderboard across events. Quick enough for busy schedules, competitive enough to be interesting.",
     niche: null,
-    contacts: null
+    tags: null
   },
+
   {
     title: "Breathwork Circle",
-    subtitle: "Guided session — bring an instructor or BYO",
+    subtitle: "Guided session — bring a certified facilitator",
     time: "2hr",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -824,21 +1100,34 @@ const events = [
     category: "wellness",
     location: "BXB villa, beach pavilion, or yoga studio — Canggu",
     hosting: {
-      summary: "Book a breathwork facilitator or bring your own certified instructor. Confirm location and headcount. Set the intention for the session.",
-      structure: "Opening circle — host sets the intention (10 min). Guided breathwork session, typically holotropic or Wim Hof style (45–60 min). Integration + sharing circle (20 min). Close. Powerful experience — keep the space safe and judgment-free.",
-      food: null,
-      hostTip: "This one requires a good facilitator. Don't wing it. If you're not trained, hire someone. The sharing circle after is where the real connection happens. Keep it confidential."
+      tagline: "Book a facilitator. Set an intention. Create a confidential, safe space. Powerful experience.",
+      invite: "[DATE] [TIME–TIME+90MIN] — Breathwork circle at [LOCATION]. Facilitator is [NAME]. We'll do a guided breathwork session, then a sharing circle. This is a confidential group experience. What's shared here stays here. Newcomers welcome. [ADDRESS]. RSVP so I know headcount.",
+      setup: "Book a certified breathwork facilitator (Arjuna Kemp, Luna Breathwork Bali, or another trusted instructor). Confirm they handle holotropic or Wim Hof style or whatever works for your group. Get to the space 15 min early and arrange chairs in a circle.",
+      frame: "Once everyone's seated: 'Welcome. This is a confidential space. What we share here doesn't leave this room. We're going to do a 45–60 min guided breathwork journey with [FACILITATOR]. You'll follow along at your own pace. After, we'll have a 20-min sharing circle if anyone wants to talk about their experience. No pressure to share. Ready? [FACILITATOR], you're up.'",
+      timeline: [
+        ["0:00", "Everyone arrives. Sit in circle. Host sets intention (10 min)."],
+        ["0:10", "Facilitator leads breathwork session (45–60 min). Guided breath patterns, music, possible visions/emotions."],
+        ["1:10", "Wind-down and return to normal breathing (5 min)."],
+        ["1:15", "Integration and sharing circle: 'Anyone want to share?' (20 min). Host listens, doesn't judge."],
+        ["1:35", "Close. Thank the facilitator. People leave quietly or stay and chat in pairs."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "This one requires a good facilitator. Don't wing it. If you're not trained in breathwork, hire someone. The sharing circle after is where the real connection happens. Your job is to create a safe, confidential container. Keep it that way.",
+      variations: "Wim Hof Protocol: cold exposure breathing focused. Holotropic Journey: deeper, longer, more intense. Box Breathing for Performance: tactical breathing for calm and focus. Pranayama Flow: yogic breathing techniques.",
+      additionalNotes: "Rotate formats so it feels fresh. Once a month keeps it special and prevents it from becoming routine. Confidentiality is key — people need to feel safe sharing vulnerable stuff. Facilitators: Arjuna Kemp — +62 821-4500-7738 (holotropic + Wim Hof, group sessions, 5+ yrs in Bali), Luna Breathwork Bali — +62 878-6223-1155 (trauma-informed, gentle + deep options). Or bring your own certified instructor — just confirm with the BXB team in advance."
     },
     twoHrNote: "90 min including integration. Deep work in a compact format.",
     content: false,
     repeatable: true,
     note: "Powerful group experience. Once a month keeps it special. Confidentiality is key.",
     niche: "Styles to rotate: 'Wim Hof Protocol,' 'Holotropic Journey,' 'Box Breathing for Performance,' 'Pranayama Flow.'",
-    contacts: "Breathwork facilitators:<br><strong>Arjuna Kemp</strong> — +62 821-4500-7738 (holotropic + Wim Hof, group sessions, 5+ yrs in Bali)<br><strong>Luna Breathwork Bali</strong> — +62 878-6223-1155 (trauma-informed, gentle + deep options)<br>Or bring your own certified instructor — just confirm with the BXB team in advance."
+    tags: null
   },
+
   {
     title: "Hiking Trip",
-    subtitle: "Curated trail with group — conversation on the move",
+    subtitle: "Curated trail with group. Conversation on the move.",
     time: "half",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -846,17 +1135,30 @@ const events = [
     category: "adventure",
     location: "Rotating trails across Bali — see trail list",
     hosting: {
-      summary: "Pick a trail from the list. Confirm difficulty level, meeting point, and transport. Send the details 72 hrs out. Lead or assign a sweep.",
-      structure: "Meet at trailhead. Brief on distance and pace (5 min). Hike with structured buddy pairs — host assigns pairs from different circles. Water break midway with one group check-in question. Summit or endpoint photo. Return and optional post-hike meal.",
-      food: "Post-hike meal at a nearby warung — each pays own.",
-      hostTip: "Assigning buddy pairs for the hike creates deeper 1-on-1 conversations than group chatter. Pick a trail that matches the group's fitness level. Always have a sweep (last person)."
+      tagline: "Pick a trail. Assign buddy pairs. Hike. Debrief. Optional post-hike meal.",
+      invite: "[DATE] — Hiking trip to [TRAIL]. Difficulty: [easy/moderate/hard]. Drive time: [#HRS]. Trailhead meet at [TIME]. It's about [DURATION] of hiking + drive. Post-hike meal at [WARUNG] if anyone wants. [ADDRESS]. Let me know your fitness level.",
+      setup: "Pick a trail from the list that matches the group's fitness. Confirm the trailhead location, drive time, parking. Scout difficulty level and water access. Plan a post-hike meal spot nearby.",
+      frame: "At the trailhead: 'We're hiking to [DESTINATION]. It's [DURATION] so pace yourself. I've assigned buddy pairs — you're hiking with [PERSON]. This isn't a race — it's about conversation and taking in the scenery. Water break midway where we'll check in as a group. Everyone clear? Let's go.'",
+      timeline: [
+        ["0:00", "Meet at trailhead. Quick briefing on distance, pace, water (5 min)."],
+        ["0:05", "Start hiking. Buddy pairs move at their own pace, stay together."],
+        ["MIDWAY", "Water break. Group check-in: 'How is everyone? What's standing out?' (10 min)."],
+        ["FINISH", "Reach summit or endpoint. Group photo (content moment) (5 min)."],
+        ["FINISH+10", "Hike back down or return journey."],
+        ["RETURN", "Everyone back at parking. Head to post-hike warung for optional meal and snacks. Each pays own."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "Assigning buddy pairs for the hike creates deeper 1-on-1 conversations than group chatter. Pick a trail that matches the group's fitness level. Always have a sweep — the last person to make sure nobody gets lost.",
+      variations: "Sunrise hike + meditation at the top. Trail talk: business deep dive between buddy pairs. Photography hike — content day with special focus on great shots.",
+      additionalNotes: "Rotate trails to keep it fresh. Assign pairs strategically from different circles so people bond across cliques. Post-hike meal at a local warung is optional but extends the social moment. Trail list below includes 10 curated options."
     },
     twoHrNote: null,
     content: true,
     repeatable: true,
     note: null,
     niche: "Theme it: 'Sunrise Hike + Meditation,' 'Trail Talk: Business Deep Dive,' 'Photography Hike — Content Day.'",
-    contacts: null,
+    tags: null,
     trailList: [
       { name: "Campuhan Ridge Walk", location: "Ubud", time: "1.5–2 hrs", difficulty: "Easy", notes: "Sunrise start. Iconic ridge with valley views. Great for a casual conversation hike." },
       { name: "Tegallalang Rice Terraces Loop", location: "Ubud", time: "2–3 hrs", difficulty: "Easy–Moderate", notes: "Walk through working rice paddies. Photo-heavy. Good content day option." },
@@ -870,10 +1172,11 @@ const events = [
       { name: "West Bali National Park", location: "Jembrana (2.5 hrs from Canggu)", time: "4–6 hrs", difficulty: "Moderate–Hard", notes: "Full-day expedition. Jungle, coast, wildlife. Needs a local guide." }
     ]
   },
+
   // ═══════════════════════ HALF DAY ═══════════════════════
   {
     title: "SUP / Kayak + Snorkel",
-    subtitle: "Paddle out, snorkel, regroup",
+    subtitle: "Paddle out, snorkel, regroup on the beach",
     time: "half",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -881,43 +1184,35 @@ const events = [
     category: "adventure",
     location: "Blue Lagoon, Padangbai (~45 min from Canggu)",
     hosting: {
-      summary: "Reserve boards or kayaks. Arrange shared transport. Confirm snorkel gear on-site.",
-      structure: "Meet at venue. Gear check (15 min). Paddle out and snorkel (90–120 min). Regroup on the beach. Optional lunch at a local warung before heading back.",
-      food: "Local warung after — each pays own.",
-      hostTip: "Padangbai is easier access than Nusa Penida. Flag travel time in the invite — this is a half-day commitment."
+      tagline: "Easiest water adventure to organize. Snorkel, regroup, optional lunch.",
+      invite: "[DATE] [TIME] — SUP/kayak + snorkel at Blue Lagoon, Padangbai. We're meeting at [SPOT], paddling out to the reef, snorkeling, then regrouping. Cost: [BOARD RENTAL]. Bring a rash guard and towel. [ADDRESS]. RSVP.",
+      setup: "Reserve boards or kayaks in advance. Confirm snorkel gear availability on-site. Arrange shared transport (driver or GoJek) to the location if needed.",
+      frame: "On the beach: 'We're paddling out as a group. Stick together. Snorkel is optional — you can skip it or hang out on the board. We'll regroup on the beach in 90 min. If anyone wants lunch after, we'll hit up [WARUNG]. Let's go.'",
+      timeline: [
+        ["0:00", "Arrive at venue. Get boards/kayaks and snorkel gear (15 min)."],
+        ["0:15", "Brief on conditions and safety (5 min)."],
+        ["0:20", "Paddle out as a group (15 min)."],
+        ["0:35", "Snorkel the reef (60 min). Paddle around, explore, take in the fish and coral."],
+        ["1:35", "Head back to shore (10 min)."],
+        ["1:45", "Debrief on the beach. Optional lunch at nearby warung (30 min or longer)."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "No facilitation needed. You're just coordinating transport and gear. The snorkel is the experience — people enjoy it naturally.",
+      variations: "Sunrise paddle: start early, watch the sunrise from the water. Sunset paddle: timing for golden hour. Photography focus: bring underwater camera, capture the reef and group.",
+      additionalNotes: "Padangbai is easier access than Nusa Penida. Flag travel time in the invite — this is a half-day commitment with 45 min drive each way. Optional lunch extends the social moment but isn't required."
     },
     twoHrNote: null,
     content: true,
     repeatable: true,
     note: "Padangbai is easier access than Nusa Penida. Half-day — flag travel time in the invite.",
     niche: null,
-    contacts: null
+    tags: null
   },
-  {
-    title: "Golf — 9 Holes + Breakfast",
-    subtitle: "The post-round breakfast is the real event",
-    time: "half",
-    freq: "monthly",
-    freqLabel: "Monthly",
-    duration: "4–5 hrs",
-    category: "sport",
-    location: "Nirwana Bali Golf Club or New Kuta Golf",
-    hosting: {
-      summary: "Book tee time. Coordinate carts. Breakfast at the club after — best conversations happen there.",
-      structure: "Tee off. 9 holes (~3 hrs with cart). Post-round breakfast at the club restaurant — the real networking event. Each pays their own.",
-      food: "Club restaurant post-round. Each pays their own.",
-      hostTip: "9 holes keeps it accessible for non-golfers. The breakfast after is where the real conversations happen. Book early — tee times fill up."
-    },
-    twoHrNote: null,
-    content: true,
-    repeatable: true,
-    note: "9 holes keeps it accessible. Post-round breakfast is the real event.",
-    niche: null,
-    contacts: null
-  },
+
   {
     title: "Motorcycle Route",
-    subtitle: "Planned route, lunch stop, content opportunity",
+    subtitle: "Planned route, lunch stop, drone content",
     time: "half",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -925,22 +1220,36 @@ const events = [
     category: "adventure",
     location: "North Bali or East Bali coastal roads",
     hosting: {
-      summary: "Plan the route. Share GPX file before departure. Pick a lunch spot. Lead or sweep.",
-      structure: "Meet at departure point. Safety brief (5 min). Ride in formation with lead and sweep riders. Photo/drone stop midway. Lunch at a pre-selected spot. Return together or split for direct routes home.",
-      food: "Lunch stop en route — each pays own.",
-      hostTip: "Drone shot of the group formation is standout content. Rotating routes keep it fresh for repeat hosts. Make sure everyone has proper gear."
+      tagline: "Plan a scenic route. Lead the group. Capture drone footage. Create standout content.",
+      invite: "[DATE] [TIME] — Motorcycle ride to [DESTINATION]. Route: [DESCRIPTION]. Lunch at [SPOT]. I'm leading — follow my pace. Bring your moto, helmet, water. Full route GPX will be sent. Let me know if you're in.",
+      setup: "Plan a scenic route in advance. Share the GPX file with the group or write out turn-by-turn. Pick a lunch spot along the route. Arrange for a drone shot if possible — formation riding creates great content.",
+      frame: "At the departure point: 'Route is [DESCRIPTION]. We'll ride in formation with me in front and [SWEEP RIDER] in back. Photo stop midway. Lunch at [SPOT] is around [TIME]. Pace is [speed]. Everyone clear on the route? Let's roll.'",
+      timeline: [
+        ["0:00", "Meet at departure. Safety brief (10 min)."],
+        ["0:10", "Ride in formation. Lead rider sets pace. Sweep rider stays at back (2–3 hrs depending on route)."],
+        ["2:00–2:30", "Photo/drone stop midway. Formation shot for content (15 min)."],
+        ["ROUTE TIME", "Arrive at lunch destination."],
+        ["LUNCH TIME", "Post-ride meal at the spot (1–2 hrs)."],
+        ["LUNCH+2", "Ride back to Canggu or split to direct routes home."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "You're the navigation lead. Make sure the GPX is clear so people don't get lost. A drone shot of the group formation is standout content — definitely worth arranging.",
+      variations: "Night ride: Canggu to Tanah Lot at sunset and back. Sunrise departure: leave at 5am, catch the sunrise from a ridge. Mystery route: host doesn't reveal destination until departure. Photo challenge: best photo wins (judged by group at lunch). Café crawl: three coffee stops along the route, quick espresso at each. Challenge cards: each rider brings one question written on a card, shuffled and read at lunch.",
+      additionalNotes: "Rotating routes keep it fresh for repeat hosts. Make sure everyone has proper gear. Drone content is the standout — a formation shot of 6–8 motos together is premium content. Most boat captains also dive and fish alongside you — they're experienced."
     },
     twoHrNote: null,
     content: true,
     repeatable: false,
     note: "Drone shot of the group formation is standout content. Rotating routes mean repeat hosts bring something new.",
     niche: null,
-    contacts: null
+    tags: null
   },
+
   // ═══════════════════════ FULL DAY ═══════════════════════
   {
     title: "Waterfall Trip + Content Day",
-    subtitle: "Videographers on site — a month of content in one day",
+    subtitle: "Videographers on site. A month of content in one day.",
     time: "day",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -948,21 +1257,36 @@ const events = [
     category: "adventure",
     location: "Sekumpul or Tibumana Waterfall (~1.5–2 hrs from Canggu)",
     hosting: {
-      summary: "Hire one or two videographers for the group. Coordinate transport. Everyone leaves with a month of content.",
-      structure: "Early departure. Travel to location (1.5–2 hrs). Explore, swim, and shoot content with videographers (3–4 hrs). Lunch at local warung. Return. Videographer delivers edits to each member within a week.",
-      food: "Warungs on-site or packed lunch — coordinate in advance.",
-      hostTip: "The content angle is the reason to go. Negotiate a group rate with the videographer. One day, a month of material for every member."
+      tagline: "Hire videographers. Create content moments. Everyone leaves with a month of clips.",
+      invite: "[DATE] full day — Waterfall trip + content day at [WATERFALL]. We're bringing videographers to capture the day. You'll leave with personal clips from the hike, waterfall, group moments. Early departure [TIME] from [SPOT]. [ADDRESS]. Let me know you're in.",
+      setup: "Hire 1–2 videographers for the day ($300–600 depending on setup). Negotiate group rates. Coordinate transport for everyone. Scout the waterfall for photo/video spots beforehand.",
+      frame: "Before departure: 'We're doing a full waterfall day with videographers. They'll capture individual moments, group stuff, all of it. You'll get personal clips edited within a week. This is a content-focused day — be ready to get shots and have fun. Let's go.'",
+      timeline: [
+        ["0:00", "Depart Canggu (early morning, time depends on drive)."],
+        ["1:30–2:00", "Arrive at trailhead. Brief. Videographers get positioned."],
+        ["2:00–3:30", "Hike to waterfall. Videographers capture candid and posed moments. Hype man keeps energy up."],
+        ["3:30–4:30", "Waterfall exploration. Capture group power poses, individual contemplation shots, acro yoga if anyone's game, slow-mo shots running through water, jump shots from safe ledges, candid laughing moments."],
+        ["4:30–5:00", "Lunch at a nearby warung or packed setup."],
+        ["5:00–5:30", "Optional: more content shoots if time allows."],
+        ["5:30+", "Return to Canggu."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "You're the organizer, not the videographer. Let the pros do their job. Your job is to keep the energy high and make sure people are comfortable being on camera.",
+      variations: "Beach day with videographer instead of waterfall. Multi-day trip with overnight and extended content capture. Specific sport + content angle (e.g., diving + videographer). Photographer-focused instead of videographer.",
+      additionalNotes: "Hosts should come prepared with photo/video ideas: Group power pose at the base of the waterfall, individual 'walking toward camera' shot on the trail, acro yoga poses (pairs — if anyone is game), 'arms up' victory shot under the falls, candid laughing shots mid-hike, slow-mo running through water, 'looking into the distance' contemplative shot on a rock, jump shot off a ledge (if safe). Brainstorm list for hosts: bring a bluetooth speaker for the van ride, create a group playlist beforehand, assign a 'hype man' who keeps the energy up, bring snacks for the hike, create a photo challenge with a prize, bring face paint or matching bandanas for group identity. The content angle is the reason to go. One day, a month of material for every member."
     },
     twoHrNote: null,
     content: true,
     repeatable: false,
     note: "The content angle is the reason to go. One day, a month of material for every member.",
     niche: null,
-    contacts: null
+    tags: null
   },
+
   {
     title: "Spearfishing Trip",
-    subtitle: "One of the high-status events to host",
+    subtitle: "One of the high-status events to host. Limit to 6–8.",
     time: "day",
     freq: "monthly",
     freqLabel: "Monthly",
@@ -970,22 +1294,37 @@ const events = [
     category: "adventure",
     location: "North Bali coast — boat from Amed or Lovina",
     hosting: {
-      summary: "Charter the boat. Source fins, spearguns, wetsuits. Negotiate group rate. Confirm captain and safety equipment.",
-      structure: "Early morning departure. Boat ride to the spot (1–2 hrs). Spearfishing session (3–4 hrs). Catch-and-cook on the beach or at a local warung. Return. Limit to 6–8 guys for safety and logistics.",
-      food: "Catch-and-cook dinner if catch is good. Otherwise split a meal at a local warung.",
-      hostTip: "Requires 2 weeks lead time. One of the highest-status events to host. Limit group size — the boat dictates capacity. Make sure everyone gets a briefing on safety."
+      tagline: "Charter a boat. Limit group size. Catch and cook on the beach. Highest-status event.",
+      invite: "[DATE] full day — Spearfishing trip off the North Bali coast. We're taking a boat out [TIME–RETURN TIME]. Limit: 6–8 guys for safety and logistics. Captain handles the fishing, chef cooks the catch on the beach. Bring a sarong and towel. Cost: [SPLIT]. Early departure from [SPOT]. Let me know if you're in. [This requires 2 weeks lead time.]",
+      setup: "Charter a boat from Amed or Lovina. Confirm captain experience, equipment (spearguns, fins, wetsuits), and safety briefing. Negotiate group rate. Confirm the catch-and-cook service or arrange backup meal. Scout shower access for post-trip.",
+      frame: "On the boat before departure: 'Captain's going to brief you on safety and technique. You'll be spearfishing for [DURATION] with the captain guiding. Watch for other divers and fish. If you don't feel comfortable, stay on the boat — no pressure. After, we'll cook the catch on the beach with [CAPTAIN] and [CREW]. Any questions?'",
+      timeline: [
+        ["0:00", "Meet at boat dock. Safety briefing from captain (15 min)."],
+        ["0:15", "Board boat. Gear check and setup (15 min)."],
+        ["0:30", "Boat ride to spot (~1–2 hrs depending on location)."],
+        ["2:00–5:00", "Spearfishing session (3–4 hrs). In-water with captain guiding, or watch from boat."],
+        ["5:00–6:00", "Return to beach."],
+        ["6:00–8:00", "Captain and crew cook catch over a fire on the beach. Beach sitting, eating, drinks, music (often someone plays guitar)."],
+        ["8:00+", "Dinner wrap. Plan logistics for everyone to get home (Grab/GoJek, ride shares, moto home)."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "Captain handles the fishing expertise. You coordinate the logistics and make sure people get home safely. The catch-and-cook ceremony is the payoff — let the captain and crew shine.",
+      variations: "Catch-and-cook on the beach vs. at a local warung. Multi-day overnight trip. Added snorkeling component. Women + men mixed group.",
+      additionalNotes: "Most boat captains also dive and fish alongside you — they're experienced and will help spot fish. Bring a sarong or towel to sit on for the beach cook-up. Dummy link for breathwork prep: [Breathwork Techniques for Freediving — relaxation breathing, CO2 tolerance, and how to stalk fish instead of chasing them](https://docs.bxbclub.com/spearfishing-breathwork). Captain coordinates coconut delivery with crew and whatever else you want (sarongs, towels, extra drinks). Make sure there's a place for guys to shower after and before their ride home. Pick a departure point in Canggu — most guys will ride their motos. A Grab/GoJek car can also be booked from the departure point for a ride share for those who don't want to ride a moto to the coast. Limit to 6–8 guys for safety and logistics. Requires 2 weeks lead time. One of the highest-status events to host."
     },
     twoHrNote: null,
     content: true,
     repeatable: false,
     note: "Limit to 6–8 guys. Requires 2 weeks lead time. One of the high-status events to host.",
     niche: null,
-    contacts: null
+    tags: null
   },
+
   // ═══════════════════════ QUARTERLY ═══════════════════════
   {
     title: "Dirt Bike Trip — Kintamani",
-    subtitle: "Operator handles the bikes — host handles the crew",
+    subtitle: "Operator handles bikes. Host handles crew. Premium experience.",
     time: "day",
     freq: "quarterly",
     freqLabel: "Quarterly",
@@ -993,17 +1332,32 @@ const events = [
     category: "adventure",
     location: "Kintamani highlands (~1.5 hrs from Canggu)",
     hosting: {
-      summary: "Source the operator. Negotiate full group rate. Confirm skill level split — beginner and advanced tracks.",
-      structure: "Meet at operator's base. Safety brief and gear check. Split into beginner and advanced groups. Ride (3–4 hrs with breaks). Lunch at the highlands. Return. Operator handles bikes, guide, and safety.",
-      food: "Lunch at the highlands. Operator often includes food.",
-      hostTip: "Operator handles bikes and guide. You handle logistics, comms, and headcount. The photos from this one are always the best content."
+      tagline: "Book an operator. Split beginner/advanced. Ride the highlands. Operator handles everything except crew management.",
+      invite: "[DATE] full day — Dirt bike trip through Kintamani highlands. Operator handles bikes, guide, route, safety. Split: beginner and advanced tracks. Lunch included. Cost: [SPLIT]. Depart [TIME] from [SPOT]. All skill levels welcome. Let me know your experience level.",
+      setup: "Contact operator in advance (James at Intrepid Moto — +62 817-5543-8891, BXB Brotherhood member). Confirm skill level split, bike sizes, guide availability, and lunch logistics. Get headcount 1 week before.",
+      frame: "At the operator's base: 'Operator and guide are handling everything — bikes, route, safety. If you're a beginner, you'll ride an easier route. If you're experienced, you'll tackle more technical terrain. Both groups stop for lunch together. Any questions? Let's get geared up.'",
+      timeline: [
+        ["0:00", "Arrive at operator base. Gear distribution and fit (20 min)."],
+        ["0:20", "Safety briefing and demo (15 min)."],
+        ["0:35", "Split into groups — beginner and advanced."],
+        ["0:45", "Riding begins. Each group on their route (2–3 hrs)."],
+        ["3:00–4:00", "Lunch break at a highland café with views (1 hr). Both groups regroup and eat together."],
+        ["4:00–5:00", "Afternoon ride (1–2 hrs depending on group)."],
+        ["5:30–6:00", "Return to base. Debrief and photo (15 min)."],
+        ["6:00", "Head back to Canggu."]
+      ],
+      questions: null,
+      questionsNote: null,
+      shy: "Operator handles everything. You handle people management — headcount, logistics, making sure people are comfortable, post-ride group photo. The photos from this one are always the best content.",
+      variations: "Overnight trip option for those who want to extend (totally optional day trip is default). Coffee shop stops (Batur Sari Coffee, Tegallalang Swing & Cafe, Kintamani Eco Lodge, Munduk Moding Plantation). Optional overnight stays (Lakeview Eco Lodge ~600K IDR/night with volcano views, Munduk Moding Plantation ~800K IDR/night with infinity pool, The Cozy Villas Lembongan placeholder).",
+      additionalNotes: "James at Intrepid Moto — +62 817-5543-8891 (BXB Brotherhood member, handles rentals, route planning, and guides for all skill levels). Start here. Recommended pit stops with views: Batur Sari Coffee (lakeside, Kintamani), Tegallalang Swing & Café (rice terrace views), Kintamani Eco Lodge café (volcano overlook), Munduk Moding Plantation (for the northern route). For anyone wanting a two-day trip: flag it in the invite as 'staying overnight is optional, day trip is the default.' Operator handles bikes and guide. Host handles logistics, comms, and headcount. The photos from this one are always the best content."
     },
     twoHrNote: null,
     content: true,
     repeatable: false,
     note: "Operator handles bikes and guide. Host handles logistics, comms, and headcount.",
     niche: null,
-    contacts: null
+    tags: null
   }
 ];
 
@@ -1030,13 +1384,24 @@ function renderCards(filterTime, filterFreq, filterCat) {
       let dropdownHTML = '';
       if (e.hosting) {
         let bodyContent = '';
-        bodyContent += `<h4>How to Host</h4><p>${e.hosting.summary}</p>`;
-        bodyContent += `<h4>Structure & Flow</h4><p>${e.hosting.structure}</p>`;
-        if (e.hosting.food) bodyContent += `<h4>Food & Drinks</h4><p class="food-note">${e.hosting.food}</p>`;
-        bodyContent += `<h4>Host Tip</h4><p>${e.hosting.hostTip}</p>`;
+        bodyContent += `<h4>What This Is</h4><p>${e.hosting.tagline}</p>`;
+        bodyContent += `<h4>Invite Copy</h4><div class="invite-block">${e.hosting.invite}</div>`;
+        bodyContent += `<h4>Setup Before the Day</h4><p>${e.hosting.setup}</p>`;
+        bodyContent += `<h4>How to Set the Frame</h4><div class="script-block">${e.hosting.frame}</div>`;
+        if (e.hosting.science) bodyContent += `<h4>Why This Works</h4><div class="science-block">${e.hosting.science}</div>`;
+        if (e.hosting.timeline && e.hosting.timeline.length) {
+          bodyContent += `<h4>Run of Show</h4><div class="timeline">${e.hosting.timeline.map(([t,c]) => `<div class="tl-item"><div class="tl-time">${t}</div><div class="tl-content">${c}</div></div>`).join('')}</div>`;
+        }
+        if (e.hosting.questions && e.hosting.questions.length) {
+          bodyContent += `<h4>Question Bank${e.hosting.questionsNote ? ' <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);">' + e.hosting.questionsNote + '</span>' : ''}</h4>`;
+          bodyContent += `<ul class="q-list">${e.hosting.questions.map(q => `<li>${q}</li>`).join('')}</ul>`;
+        }
+        bodyContent += `<h4>If You're a Shy Host</h4><div class="shy-block">${e.hosting.shy}</div>`;
+        if (e.hosting.variations) bodyContent += `<h4>Variations & Ideas</h4><p>${e.hosting.variations}</p>`;
+        if (e.hosting.additionalNotes) bodyContent += `<h4>Additional Notes</h4><p>${e.hosting.additionalNotes}</p>`;
         dropdownHTML = `
           <button class="dropdown-toggle" onclick="toggleDrop('${uid}', this)">
-            Your Hosting Guide <span style="font-weight:400;color:var(--text-muted);">— provided to every host</span> <span class="arrow">▼</span>
+            Your Hosting Guide — provided to every host <span class="arrow">▼</span>
           </button>
           <div class="dropdown-body" id="${uid}">${bodyContent}</div>
         `;
@@ -1080,7 +1445,6 @@ function renderCards(filterTime, filterFreq, filterCat) {
         ${e.twoHrNote ? `<div class="twohr-note">⏱ ${e.twoHrNote}</div>` : ''}
         ${e.note ? `<div class="card-note">${e.note}</div>` : ''}
         ${e.niche ? `<div class="niche-suggestion"><strong>Niche it:</strong> ${e.niche}</div>` : ''}
-        ${e.contacts ? `<div class="contact-info">📞 ${e.contacts}</div>` : ''}
         ${trailHTML}
         <div class="tag-row">
           ${e.content ? '<span class="tag tag-content">+ content</span>' : ''}
@@ -1135,7 +1499,6 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
         activeFreq = filter;
         btn.classList.add('active');
       }
-      // Clear main "all" active if a freq filter is applied
       if (activeFreq) {
         activeTime = 'all';
         document.querySelectorAll('[data-group="main"]').forEach(b => b.classList.remove('active'));
